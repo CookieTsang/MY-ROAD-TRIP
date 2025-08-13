@@ -30,6 +30,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+  <!-- 预加载首屏关键图片 -->
+  <link rel="preload" as="image" href="images/1.jpg" type="image/jpeg">
+  <link rel="preload" as="image" href="images/7.gif" type="image/gif">
+
   <script>
     tailwind.config = {
       theme: {
@@ -258,6 +262,13 @@
       background-color: rgba(10, 25, 47, 0.9);
       border-top: 1px solid rgba(100, 255, 218, 0.2);
     }
+
+    /* 图片占位符样式 */
+    .image-placeholder {
+      background-color: #112240;
+      background-image: linear-gradient(45deg, rgba(100, 255, 218, 0.1) 25%, transparent 25%, transparent 50%, rgba(100, 255, 218, 0.1) 50%, rgba(100, 255, 218, 0.1) 75%, transparent 75%, transparent);
+      background-size: 20px 20px;
+    }
   </style>
 </head>
 
@@ -297,7 +308,7 @@
   <section id="hero" class="image-container visible">
     <div class="absolute inset-0 bg-black/30"></div>
     <!-- 背景图带缩放动画 -->
-    <div class="absolute inset-0 zoom-in" style="background-image: url('images/1.jpg');"></div>
+    <div class="absolute inset-0 zoom-in" data-src="images/1.jpg" style="background-image: url('images/1.jpg');"></div>
     
   <!-- 中央大标题带动画，包含副标题 -->
   <div class="absolute inset-0 flex items-center justify-center z-10 px-4">
@@ -331,7 +342,7 @@
   <!-- 第二张图 -->
   <div class="image-container">
     <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-    <div class="absolute inset-0 parallax" style="background-image: url('images/7.gif');"></div>
+    <div class="absolute inset-0 parallax image-placeholder" data-src="images/7.gif"></div>
     <div class="absolute bottom-0 right-0 p-6 md:p-10 z-10 max-w-xl fade-in text-right">
       <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
         探索广阔荒野
@@ -343,12 +354,10 @@
   </div>
 </section>
 
-
-
     <!-- 第三张图 -->
     <div class="image-container">
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax" style="background-image: url('images/3.jpg');"></div>
+      <div class="absolute inset-0 parallax image-placeholder" data-src="images/3.jpg"></div>
       <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
         <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
           升级你的座驾
@@ -362,7 +371,7 @@
     <!-- 第四张图 -->
     <div class="image-container">
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax" style="background-image: url('images/4.jpg');"></div>
+      <div class="absolute inset-0 parallax image-placeholder" data-src="images/4.jpg"></div>
       <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
         <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
           真实悬挂表现
@@ -376,7 +385,7 @@
     <!-- 第五张图 -->
     <div class="image-container">
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax" style="background-image: url('images/5.jpg');"></div>
+      <div class="absolute inset-0 parallax image-placeholder" data-src="images/5.jpg"></div>
       <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
         <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
           解锁隐藏故事
@@ -390,7 +399,7 @@
     <!-- 第六张图 -->
     <div class="image-container">
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax" style="background-image: url('images/6.jpg');"></div>
+      <div class="absolute inset-0 parallax image-placeholder" data-src="images/6.jpg"></div>
       <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
         <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
           挑战极限地形
@@ -563,32 +572,65 @@
       }
     });
     
-    // 元素滚动动画
+    // 图片懒加载功能 - 实现从上到下加载
+    function loadImage(element) {
+      const src = element.getAttribute('data-src');
+      if (src) {
+        // 创建一个新的Image对象来预加载图片
+        const img = new Image();
+        img.src = src;
+        img.onload = function() {
+          // 图片加载完成后再设置背景，避免闪烁
+          element.style.backgroundImage = `url('${src}')`;
+          // 移除占位符样式
+          element.classList.remove('image-placeholder');
+        };
+      }
+    }
+    
+    // 元素滚动动画和图片懒加载
     document.addEventListener('DOMContentLoaded', () => {
       // 选择所有需要添加动画的元素
       const animatedElements = document.querySelectorAll('.image-container, .fade-in');
+      // 选择所有需要懒加载的图片
+      const lazyImages = document.querySelectorAll('[data-src]');
       
       const observerOptions = {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.15
+        rootMargin: '0px 0px 200px 0px', // 在元素进入视口前200px就开始加载
+        threshold: 0.1
       };
       
       const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
+            // 如果是图片容器，加载图片
+            if (entry.target.hasAttribute('data-src')) {
+              loadImage(entry.target);
+            }
+            // 添加可见性类以触发动画
+            if (!entry.target.classList.contains('visible')) {
+              entry.target.classList.add('visible');
+            }
+            // 对于图片，只观察一次
+            if (entry.target.hasAttribute('data-src')) {
+              observer.unobserve(entry.target);
+            }
           }
         });
       }, observerOptions);
       
-      // 观察所有动画元素
+      // 观察所有动画元素和懒加载图片
       animatedElements.forEach((element, index) => {
         // 第一张图已经默认显示，其他元素需要观察
         if (index > 0) {
           observer.observe(element);
         }
+      });
+      
+      // 观察所有懒加载图片
+      lazyImages.forEach(image => {
+        observer.observe(image);
       });
     });
   </script>

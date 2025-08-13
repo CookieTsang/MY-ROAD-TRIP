@@ -11,7 +11,6 @@
       margin: 0;
       padding: 0;
       overflow-x: hidden;
-      /* 星空深蓝渐变背景 */
       background: linear-gradient(135deg, #0a192f 0%, #112240 50%, #0a192f 100%);
       color: #e6f1ff;
     }
@@ -30,9 +29,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-  <!-- 预加载首屏关键图片 -->
-  <link rel="preload" as="image" href="images/1.jpg" type="image/jpeg">
+  <!-- 最高优先级预加载1.jpg，其次是其他图片 -->
+  <link rel="preload" as="image" href="images/1.jpg" type="image/jpeg" fetchpriority="high">
   <link rel="preload" as="image" href="images/7.gif" type="image/gif">
+  <link rel="preload" as="image" href="images/3.jpg" type="image/jpeg">
+  <link rel="preload" as="image" href="images/4.jpg" type="image/jpeg">
+  <link rel="preload" as="image" href="images/5.jpg" type="image/jpeg">
+  <link rel="preload" as="image" href="images/6.jpg" type="image/jpeg">
 
   <script>
     tailwind.config = {
@@ -43,7 +46,8 @@
             secondary: '#10B981', 
             dark: '#0a192f',
             accent: '#e6f1ff',
-            textColor: '#e6f1ff'
+            textColor: '#e6f1ff',
+            bilibili: '#FB7299' // B站粉色
           }
         }
       }
@@ -51,6 +55,7 @@
   </script>
 
   <style>
+    /* 原有样式保持不变 */
     html {
       scroll-behavior: smooth;
     }
@@ -96,7 +101,6 @@
       overflow: hidden;
     }
 
-    /* 图片两侧渐变模糊效果 - 中间80%清晰 */
     .image-container::before,
     .image-container::after {
       content: '';
@@ -123,10 +127,8 @@
       transform: translateY(0);
     }
 
-    /* 视差滚动效果 */
     .parallax {
       background-attachment: fixed;
-      /* 确保图片铺满且居中 */
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
@@ -134,7 +136,6 @@
       height: 100%;
     }
 
-    /* 文字渐入动画 */
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
@@ -146,10 +147,8 @@
       transform: translateY(0);
     }
 
-    /* 图片缩放动画 */
     .zoom-in {
       animation: zoomIn 15s ease-in-out infinite alternate;
-      /* 确保图片铺满且居中 */
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
@@ -166,7 +165,6 @@
       }
     }
 
-    /* 按钮悬停动画 */
     .btn-hover {
       position: relative;
       overflow: hidden;
@@ -189,7 +187,21 @@
       height: 100%;
     }
 
-    /* 特色卡片悬停动画 */
+    /* B站按钮特殊样式 */
+    .bilibili-btn {
+      border-color: #FB7299;
+      color: #FB7299;
+      background-color: rgba(251, 114, 153, 0.1);
+    }
+    
+    .bilibili-btn:hover {
+      background-color: rgba(251, 114, 153, 0.2);
+    }
+    
+    .bilibili-btn::after {
+      background-color: rgba(251, 114, 153, 0.15);
+    }
+
     .feature-card {
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       background-color: rgba(17, 34, 64, 0.7);
@@ -209,12 +221,7 @@
       transform: scale(1.15) rotate(5deg);
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    h1, h2, h3, h4, h5, h6 {
       font-weight: 600;
       color: #e6f1ff;
     }
@@ -223,7 +230,6 @@
       line-height: 1.6;
     }
 
-    /* 标题动画 */
     .title-animation {
       animation: titlePulse 3s ease-in-out infinite alternate;
     }
@@ -237,7 +243,6 @@
       }
     }
 
-    /* 滚动指示器动画 */
     .bounce-slow {
       animation: bounce 2s infinite;
     }
@@ -263,16 +268,26 @@
       border-top: 1px solid rgba(100, 255, 218, 0.2);
     }
 
-    /* 图片占位符样式 */
     .image-placeholder {
       background-color: #112240;
       background-image: linear-gradient(45deg, rgba(100, 255, 218, 0.1) 25%, transparent 25%, transparent 50%, rgba(100, 255, 218, 0.1) 50%, rgba(100, 255, 218, 0.1) 75%, transparent 75%, transparent);
       background-size: 20px 20px;
     }
+    
+    /* 社区链接容器间距 */
+    .community-links {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
   </style>
 </head>
 
 <body class="font-sans">
+  <!-- 导航栏部分 -->
   <nav id="main-nav" class="fixed top-0 left-0 w-full z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center">
@@ -284,7 +299,7 @@
         <a href="#screenshots" class="hover:text-primary transition-colors duration-300">截图</a>
         <a href="#features" class="hover:text-primary transition-colors duration-300">特色</a>
         <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-2 rounded transition-colors duration-300 btn-hover">
-          立即下载
+          加入社区
         </a>
       </div>
 
@@ -298,37 +313,31 @@
         <a href="#screenshots" class="py-2 hover:text-primary transition-colors duration-300">截图</a>
         <a href="#features" class="py-2 hover:text-primary transition-colors duration-300">特色</a>
         <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-3 rounded text-center transition-colors duration-300 btn-hover">
-          立即下载
+          加入社区
         </a>
       </div>
     </div>
   </nav>
 
-  <!-- 英雄区域 - 第一张图 -->
+  <!-- 英雄区域 - 1.jpg拥有最高加载优先级 -->
   <section id="hero" class="image-container visible">
     <div class="absolute inset-0 bg-black/30"></div>
-    <!-- 背景图带缩放动画 -->
     <div class="absolute inset-0 zoom-in" data-src="images/1.jpg" style="background-image: url('images/1.jpg');"></div>
     
-  <!-- 中央大标题带动画，包含副标题 -->
-  <div class="absolute inset-0 flex items-center justify-center z-10 px-4">
-    <div class="flex flex-col items-center text-center">
-      <!-- 主标题 -->
-      <h1 class="text-6xl md:text-8xl font-bold text-white leading-tight title-animation">
-        MY ROAD TRIP
-      </h1>
-      
-      <!-- 横向对齐的小标题 -->
-      <div class="flex items-center justify-center mt-4 space-x-3 text-white/90">
-        <span class="text-lg md:text-xl">A Journey of Freedom</span>
-        <span class="w-8 h-px bg-white/30"></span>
-        <span class="text-lg md:text-xl">Your Adventure Awaits</span>
+    <div class="absolute inset-0 flex items-center justify-center z-10 px-4">
+      <div class="flex flex-col items-center text-center">
+        <h1 class="text-6xl md:text-8xl font-bold text-white leading-tight title-animation">
+          MY ROAD TRIP
+        </h1>
+        
+        <div class="flex items-center justify-center mt-4 space-x-3 text-white/90">
+          <span class="text-lg md:text-xl">A Journey of Freedom</span>
+          <span class="w-8 h-px bg-white/30"></span>
+          <span class="text-lg md:text-xl">Your Adventure Awaits</span>
+        </div>
       </div>
     </div>
-  </div>
 
-
-    <!-- 滚动提示带动画 -->
     <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 bounce-slow">
       <a href="#screenshots" class="text-white/80 hover:text-white transition-colors duration-300">
         <i class="fa fa-chevron-down text-2xl"></i>
@@ -337,24 +346,22 @@
     </div>
   </section>
 
-<!-- 截图展示区 -->
-<section id="screenshots" class="mt-[-5px]">
-  <!-- 第二张图 -->
-  <div class="image-container">
-    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-    <div class="absolute inset-0 parallax image-placeholder" data-src="images/7.gif"></div>
-    <div class="absolute bottom-0 right-0 p-6 md:p-10 z-10 max-w-xl fade-in text-right">
-      <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
-        探索广阔荒野
-      </h2>
-      <p class="text-xl md:text-2xl text-white/80 mb-4">
-        穿越无尽的公路，探索多样化的地形和景观，从沙漠到森林，从山脉到海岸。
-      </p>
+  <!-- 截图展示区 -->
+  <section id="screenshots" class="mt-[-5px]">
+    <div class="image-container">
+      <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
+      <div class="absolute inset-0 parallax image-placeholder" data-src="images/7.gif"></div>
+      <div class="absolute bottom-0 right-0 p-6 md:p-10 z-10 max-w-xl fade-in text-right">
+        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
+          探索广阔荒野
+        </h2>
+        <p class="text-xl md:text-2xl text-white/80 mb-4">
+          穿越无尽的公路，探索多样化的地形和景观，从沙漠到森林，从山脉到海岸。
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-    <!-- 第三张图 -->
     <div class="image-container">
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/3.jpg"></div>
@@ -368,7 +375,6 @@
       </div>
     </div>
 
-    <!-- 第四张图 -->
     <div class="image-container">
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/4.jpg"></div>
@@ -382,7 +388,6 @@
       </div>
     </div>
 
-    <!-- 第五张图 -->
     <div class="image-container">
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/5.jpg"></div>
@@ -396,7 +401,6 @@
       </div>
     </div>
 
-    <!-- 第六张图 -->
     <div class="image-container">
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/6.jpg"></div>
@@ -411,7 +415,7 @@
     </div>
   </section>
 
-  <!-- 游戏特色 -->
+  <!-- 游戏特色部分 -->
   <section id="features" class="py-16">
     <div class="container mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 fade-in">
@@ -483,46 +487,45 @@
     </div>
   </section>
 
-  <!-- 下载区域 -->
+  <!-- 社区区域 - 包含QQ群和B站账号 -->
   <section id="download" class="py-16">
     <div class="container mx-auto px-4 text-center">
       <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-in">
-        立即开始你的公路之旅
+        加入我们的社区
       </h2>
 
       <p class="text-gray-300 max-w-2xl mx-auto mb-10 fade-in" style="transition-delay: 0.2s;">
-        现在下载《MY ROAD TRIP》，踏上这段充满未知与冒险的旅程，探索广阔的荒野世界。
+        加入我们的社群，与其他玩家交流心得，获取最新游戏资讯和独家福利。
       </p>
 
-      <div class="flex flex-col sm:flex-row justify-center gap-4 fade-in" style="transition-delay: 0.4s;">
-        <a href="#" class="flex items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-6 py-3 rounded transition-all duration-300 btn-hover">
-          <i class="fa fa-windows text-xl mr-2"></i>
-          <div>
-            <div class="text-sm">下载</div>
-            <div class="font-bold">Windows版</div>
-          </div>
+      <!-- 社区链接容器 -->
+      <div class="community-links fade-in" style="transition-delay: 0.4s;">
+        <!-- QQ粉丝群 -->
+        <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=651886971&website=www.oicqzone.com" 
+           class="flex flex-col items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
+          <i class="fa fa-qq text-4xl mb-3"></i>
+          <div class="text-xl font-bold mb-1">立即加入粉丝群</div>
+          <div class="text-2xl font-mono mt-2">651886971</div>
         </a>
+        <button onclick="copyQQNumber()" class="mt-[-1.5rem] text-sm text-primary/80 hover:text-primary transition-colors self-center">
+          <i class="fa fa-copy mr-1"></i>复制群号
+        </button>
 
-        <a href="#" class="flex items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-6 py-3 rounded transition-all duration-300 btn-hover">
-          <i class="fa fa-apple text-xl mr-2"></i>
-          <div>
-            <div class="text-sm">下载</div>
-            <div class="font-bold">macOS版</div>
-          </div>
+        <!-- 哔哩哔哩官方账号 -->
+        <a href="https://space.bilibili.com/3546609113630783" target="_blank"
+           class="flex flex-col items-center justify-center bilibili-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
+          <i class="fa fa-play-circle text-4xl mb-3"></i> <!-- 使用播放图标代替B站图标 -->
+          <div class="text-xl font-bold mb-1">点击前往官方帐号</div>
+          <div class="text-base text-gray-300 mt-2">关注获取更多信息</div>
         </a>
-
-        <a href="#" class="flex items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-6 py-3 rounded transition-all duration-300 btn-hover">
-          <i class="fa fa-mobile text-xl mr-2"></i>
-          <div>
-            <div class="text-sm">下载</div>
-            <div class="font-bold">移动版</div>
-          </div>
-        </a>
+        <button onclick="copyBilibiliUrl()" class="mt-[-1.5rem] text-sm text-bilibili/80 hover:text-bilibili transition-colors self-center">
+          <i class="fa fa-copy mr-1"></i>复制B站主页地址
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- 页脚 -->
+  <!-- 页脚部分 - 只保留Steam图标 -->
   <footer class="py-8">
     <div class="container mx-auto px-4">
       <div class="flex flex-col md:flex-row justify-between items-center">
@@ -531,24 +534,16 @@
           <span class="text-lg font-medium">MY ROAD TRIP</span>
         </div>
 
+        <!-- 只保留Steam图标 -->
         <div class="flex space-x-4 mb-4 md:mb-0">
           <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
-            <i class="fa fa-weibo text-xl"></i>
-          </a>
-          <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
-            <i class="fa fa-weixin text-xl"></i>
-          </a>
-          <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
-            <i class="fa fa-steam text-xl"></i>
-          </a>
-          <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
-            <i class="fa fa-youtube-play text-xl"></i>
+            <i class="fa fa-steam text-xl"></i> <!-- Steam -->
           </a>
         </div>
       </div>
 
       <div class="text-center text-gray-500 text-sm mt-4">
-        <p>&copy; 2023 《ROAD TRIP》</p>
+        <p>&copy; 2025 《ROAD TRIP》</p> <!-- 已更新为2025 -->
       </div>
     </div>
   </footer>
@@ -572,17 +567,14 @@
       }
     });
     
-    // 图片懒加载功能 - 实现从上到下加载
+    // 图片懒加载功能
     function loadImage(element) {
       const src = element.getAttribute('data-src');
       if (src) {
-        // 创建一个新的Image对象来预加载图片
         const img = new Image();
         img.src = src;
         img.onload = function() {
-          // 图片加载完成后再设置背景，避免闪烁
           element.style.backgroundImage = `url('${src}')`;
-          // 移除占位符样式
           element.classList.remove('image-placeholder');
         };
       }
@@ -590,29 +582,24 @@
     
     // 元素滚动动画和图片懒加载
     document.addEventListener('DOMContentLoaded', () => {
-      // 选择所有需要添加动画的元素
       const animatedElements = document.querySelectorAll('.image-container, .fade-in');
-      // 选择所有需要懒加载的图片
       const lazyImages = document.querySelectorAll('[data-src]');
       
       const observerOptions = {
         root: null,
-        rootMargin: '0px 0px 200px 0px', // 在元素进入视口前200px就开始加载
+        rootMargin: '0px 0px 200px 0px',
         threshold: 0.1
       };
       
       const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            // 如果是图片容器，加载图片
             if (entry.target.hasAttribute('data-src')) {
               loadImage(entry.target);
             }
-            // 添加可见性类以触发动画
             if (!entry.target.classList.contains('visible')) {
               entry.target.classList.add('visible');
             }
-            // 对于图片，只观察一次
             if (entry.target.hasAttribute('data-src')) {
               observer.unobserve(entry.target);
             }
@@ -620,19 +607,36 @@
         });
       }, observerOptions);
       
-      // 观察所有动画元素和懒加载图片
       animatedElements.forEach((element, index) => {
-        // 第一张图已经默认显示，其他元素需要观察
         if (index > 0) {
           observer.observe(element);
         }
       });
       
-      // 观察所有懒加载图片
       lazyImages.forEach(image => {
         observer.observe(image);
       });
     });
+
+    // 复制QQ群号功能
+    function copyQQNumber() {
+      const qqNumber = "651886971";
+      navigator.clipboard.writeText(qqNumber).then(() => {
+        alert("QQ群号已复制：" + qqNumber);
+      }).catch(err => {
+        console.error('无法复制文本: ', err);
+      });
+    }
+
+    // 复制B站主页地址功能
+    function copyBilibiliUrl() {
+      const bilibiliUrl = "https://space.bilibili.com/3546609113630783";
+      navigator.clipboard.writeText(bilibiliUrl).then(() => {
+        alert("B站主页地址已复制");
+      }).catch(err => {
+        console.error('无法复制文本: ', err);
+      });
+    }
   </script>
 </body>
 </html>

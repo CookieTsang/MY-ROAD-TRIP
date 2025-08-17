@@ -283,22 +283,57 @@
       max-width: 600px;
       margin: 0 auto;
     }
+    
+    /* 语言切换按钮 */
+    .lang-switch {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .lang-btn {
+      background-color: rgba(10, 25, 47, 0.8);
+      border: 1px solid #64ffda;
+      color: #e6f1ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .lang-btn.active {
+      background-color: #64ffda;
+      color: #0a192f;
+    }
+    
+    .lang-btn:hover:not(.active) {
+      background-color: rgba(100, 255, 218, 0.2);
+    }
   </style>
 </head>
 
 <body class="font-sans">
+  <!-- 语言切换按钮 -->
+  <div class="lang-switch">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn active" data-lang="zh">中文</button>
+  </div>
+
   <!-- 导航栏部分 -->
   <nav id="main-nav" class="fixed top-0 left-0 w-full z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center">
         <i class="fa fa-car text-primary text-xl mr-2 transition-transform duration-300 hover:rotate-12"></i>
-        <span class="text-lg font-medium">浪漫汽车旅</span>
+        <span class="text-lg font-medium" data-i18n="brand">浪漫汽车旅</span>
       </div>
 
       <div class="hidden md:flex items-center space-x-6">
-        <a href="#screenshots" class="hover:text-primary transition-colors duration-300">截图</a>
-        <a href="#features" class="hover:text-primary transition-colors duration-300">特色</a>
-        <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-2 rounded transition-colors duration-300 btn-hover">
+        <a href="#screenshots" class="hover:text-primary transition-colors duration-300" data-i18n="nav.screenshots">截图</a>
+        <a href="#features" class="hover:text-primary transition-colors duration-300" data-i18n="nav.features">特色</a>
+        <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-2 rounded transition-colors duration-300 btn-hover" data-i18n="nav.joinCommunity">
           加入社区
         </a>
       </div>
@@ -310,9 +345,9 @@
 
     <div id="mobile-menu" class="hidden md:hidden bg-dark/90 backdrop-filter: blur(10px) shadow-lg">
       <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
-        <a href="#screenshots" class="py-2 hover:text-primary transition-colors duration-300">截图</a>
-        <a href="#features" class="py-2 hover:text-primary transition-colors duration-300">特色</a>
-        <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-3 rounded text-center transition-colors duration-300 btn-hover">
+        <a href="#screenshots" class="py-2 hover:text-primary transition-colors duration-300" data-i18n="nav.screenshots">截图</a>
+        <a href="#features" class="py-2 hover:text-primary transition-colors duration-300" data-i18n="nav.features">特色</a>
+        <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-3 rounded text-center transition-colors duration-300 btn-hover" data-i18n="nav.joinCommunity">
           加入社区
         </a>
       </div>
@@ -331,9 +366,9 @@
         </h1>
         
         <div class="flex items-center justify-center mt-4 space-x-3 text-white/90">
-          <span class="text-lg md:text-xl">A Journey of Freedom</span>
+          <span class="text-lg md:text-xl" data-i18n="hero.slogan1">A Journey of Freedom</span>
           <span class="w-8 h-px bg-white/30"></span>
-          <span class="text-lg md:text-xl">Your Adventure Awaits</span>
+          <span class="text-lg md:text-xl" data-i18n="hero.slogan2">Your Adventure Awaits</span>
         </div>
       </div>
     </div>
@@ -341,7 +376,7 @@
     <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 bounce-slow">
      <a href="#screenshots" class="text-white/80 hover:text-white transition-colors duration-300 flex flex-col items-center">
       <i class="fa fa-chevron-down text-2xl"></i>
-      <p class="mt-2 text-sm text-center">向下滚动探索</p>
+      <p class="mt-2 text-sm text-center" data-i18n="hero.scrollDown">向下滚动探索</p>
     </a>
     </div>
   </section>
@@ -352,10 +387,10 @@
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/7.gif"></div>
       <div class="absolute bottom-0 right-0 p-6 md:p-10 z-10 max-w-xl fade-in text-right">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
+        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.challenge.title">
           挑战极限地形
         </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4">
+        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.challenge.desc">
           从泥泞的沼泽到陡峭的山路，每一处地形都将考验你和你的车辆，只有真正的强者才能征服一切。
         </p>
       </div>
@@ -366,10 +401,10 @@
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/3.jpg"></div>
       <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
+        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.upgrade.title">
           升级你的座驾
         </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4">
+        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.upgrade.desc">
           收集零件，改装车辆，提升性能，适应各种地形挑战，打造你心仪的座驾。
         </p>
       </div>
@@ -379,10 +414,10 @@
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/4.jpg"></div>
       <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
+        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.suspension.title">
           真实悬挂表现
         </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4">
+        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.suspension.desc">
           于恶劣天气中稳健应对，在障碍物前灵活规避，随地形起伏轻盈起舞，于荒野征途上从容决断每一次挑战。
         </p>
       </div>
@@ -392,10 +427,10 @@
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/5.jpg"></div>
       <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
+        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.stories.title">
           解锁隐藏故事
         </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4">
+        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.stories.desc">
           在旅途中发现废弃的建筑和物品，拼凑出这个世界的历史和秘密，揭示荒野背后的真相。
         </p>
       </div>
@@ -405,10 +440,10 @@
       <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
       <div class="absolute inset-0 parallax image-placeholder" data-src="images/6.jpg"></div>
       <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4">
+        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.explore.title">
          探索广阔荒野
         </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4">
+        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.explore.desc">
           驾驶载具穿越各种道路，探索多样化的地形和景观，从沙漠到森林，从山脉到海岸。
         </p>
       </div>
@@ -418,7 +453,7 @@
   <!-- 游戏特色部分 -->
   <section id="features" class="py-16">
     <div class="container mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 fade-in">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 fade-in" data-i18n="features.title">
         游戏特色
       </h2>
       <div class="w-24 h-1 bg-primary mx-auto mb-12 fade-in" style="transition-delay: 0.2s;"></div>
@@ -428,8 +463,8 @@
           <div class="text-primary text-3xl mb-4 feature-icon">
             <i class="fa fa-map-o"></i>
           </div>
-          <h3 class="text-xl font-bold mb-3">开放世界</h3>
-          <p class="text-gray-300">
+          <h3 class="text-xl font-bold mb-3" data-i18n="features.openWorld.title">开放世界</h3>
+          <p class="text-gray-300" data-i18n="features.openWorld.desc">
             无缝连接的广阔地图，自由探索，丰富的资源点和功能单位。
           </p>
         </div>
@@ -438,8 +473,8 @@
           <div class="text-primary text-3xl mb-4 feature-icon">
             <i class="fa fa-wrench"></i>
           </div>
-          <h3 class="text-xl font-bold mb-3">车辆改装</h3>
-          <p class="text-gray-300">
+          <h3 class="text-xl font-bold mb-3" data-i18n="features.customization.title">车辆改装</h3>
+          <p class="text-gray-300" data-i18n="features.customization.desc">
             数十种零件可供选择，打造独特车辆，适应不同地形和挑战。
           </p>
         </div>
@@ -448,8 +483,8 @@
           <div class="text-primary text-3xl mb-4 feature-icon">
             <i class="fa fa-moon-o"></i>
           </div>
-          <h3 class="text-xl font-bold mb-3">日夜循环</h3>
-          <p class="text-gray-300">
+          <h3 class="text-xl font-bold mb-3" data-i18n="features.cycle.title">日夜循环</h3>
+          <p class="text-gray-300" data-i18n="features.cycle.desc">
             真实的天气系统和日夜循环，影响游戏玩法和视觉体验。
           </p>
         </div>
@@ -458,8 +493,8 @@
           <div class="text-primary text-3xl mb-4 feature-icon">
             <i class="fa fa-book"></i>
           </div>
-          <h3 class="text-xl font-bold mb-3">随心所欲</h3>
-          <p class="text-gray-300">
+          <h3 class="text-xl font-bold mb-3" data-i18n="features.freedom.title">随心所欲</h3>
+          <p class="text-gray-300" data-i18n="features.freedom.desc">
             选择你的玩法，公路旅行OR运输救援。
           </p>
         </div>
@@ -468,8 +503,8 @@
           <div class="text-primary text-3xl mb-4 feature-icon">
             <i class="fa fa-users"></i>
           </div>
-          <h3 class="text-xl font-bold mb-3">NPC互动</h3>
-          <p class="text-gray-300">
+          <h3 class="text-xl font-bold mb-3" data-i18n="features.npc.title">NPC互动</h3>
+          <p class="text-gray-300" data-i18n="features.npc.desc">
             遇到各种性格鲜明的角色，接受任务，建立关系，解锁世界。
           </p>
         </div>
@@ -478,8 +513,8 @@
           <div class="text-primary text-3xl mb-4 feature-icon">
             <i class="fa fa-trophy"></i>
           </div>
-          <h3 class="text-xl font-bold mb-3">成就系统</h3>
-          <p class="text-gray-300">
+          <h3 class="text-xl font-bold mb-3" data-i18n="features.achievements.title">成就系统</h3>
+          <p class="text-gray-300" data-i18n="features.achievements.desc">
             超过50个隐藏成就，挑战你的探索能力和游戏技巧。
           </p>
         </div>
@@ -490,11 +525,11 @@
   <!-- 社区区域 - 包含QQ群和B站账号 -->
   <section id="download" class="py-16">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-in">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-in" data-i18n="community.title">
         加入我们的社区
       </h2>
 
-      <p class="text-gray-300 max-w-2xl mx-auto mb-10 fade-in" style="transition-delay: 0.2s;">
+      <p class="text-gray-300 max-w-2xl mx-auto mb-10 fade-in" style="transition-delay: 0.2s;" data-i18n="community.desc">
         加入我们的社群，与其他玩家交流心得，获取最新游戏资讯和独家福利。
       </p>
 
@@ -504,10 +539,10 @@
         <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=651886971&website=www.oicqzone.com" 
            class="flex flex-col items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
           <i class="fa fa-qq text-4xl mb-3"></i>
-          <div class="text-xl font-bold mb-1">立即加入粉丝群</div>
+          <div class="text-xl font-bold mb-1" data-i18n="community.qqGroup.title">立即加入粉丝群</div>
           <div class="text-2xl font-mono mt-2">651886971</div>
         </a>
-        <button onclick="copyQQNumber()" class="mt-[-1.5rem] text-sm text-primary/80 hover:text-primary transition-colors self-center">
+        <button onclick="copyQQNumber()" class="mt-[-1.5rem] text-sm text-primary/80 hover:text-primary transition-colors self-center" data-i18n="community.copyQQ">
           <i class="fa fa-copy mr-1"></i>复制群号
         </button>
 
@@ -515,10 +550,10 @@
         <a href="https://space.bilibili.com/3546609113630783" target="_blank"
            class="flex flex-col items-center justify-center bilibili-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
           <i class="fa fa-play-circle text-4xl mb-3"></i> <!-- 使用播放图标代替B站图标 -->
-          <div class="text-xl font-bold mb-1">点击前往官方帐号</div>
-          <div class="text-base text-gray-300 mt-2">关注获取更多信息</div>
+          <div class="text-xl font-bold mb-1" data-i18n="community.bilibili.title">点击前往官方帐号</div>
+          <div class="text-base text-gray-300 mt-2" data-i18n="community.bilibili.desc">关注获取更多信息</div>
         </a>
-        <button onclick="copyBilibiliUrl()" class="mt-[-1.5rem] text-sm text-bilibili/80 hover:text-bilibili transition-colors self-center">
+        <button onclick="copyBilibiliUrl()" class="mt-[-1.5rem] text-sm text-bilibili/80 hover:text-bilibili transition-colors self-center" data-i18n="community.copyBilibili">
           <i class="fa fa-copy mr-1"></i>复制B站主页地址
         </button>
       </div>
@@ -531,7 +566,7 @@
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="flex items-center mb-4 md:mb-0">
           <i class="fa fa-car text-primary text-xl mr-2 transition-transform duration-300 hover:rotate-12"></i>
-          <span class="text-lg font-medium">Wilderness Road Trip</span>
+          <span class="text-lg font-medium" data-i18n="brand">Wilderness Road Trip</span>
         </div>
 
         <!-- 只保留Steam图标 -->
@@ -543,12 +578,212 @@
       </div>
 
       <div class="text-center text-gray-500 text-sm mt-4">
-        <p>&copy; 2025 Wilderness Road Trip</p> <!-- 已更新为2025 -->
+        <p data-i18n="footer.copyright">&copy; 2025 Wilderness Road Trip</p>
       </div>
     </div>
   </footer>
 
   <script>
+    // 语言文本映射
+    const translations = {
+      en: {
+        brand: "Wilderness Road Trip",
+        nav: {
+          screenshots: "Screenshots",
+          features: "Features",
+          joinCommunity: "Join Community"
+        },
+        hero: {
+          slogan1: "A Journey of Freedom",
+          slogan2: "Your Adventure Awaits",
+          scrollDown: "Scroll down to explore"
+        },
+        screenshots: {
+          challenge: {
+            title: "Conquer Extreme Terrain",
+            desc: "From muddy swamps to steep mountain roads, every terrain will test you and your vehicle. Only the true强者 can conquer everything."
+          },
+          upgrade: {
+            title: "Upgrade Your Vehicle",
+            desc: "Collect parts, modify your vehicle, improve performance, adapt to various terrain challenges, and build your dream ride."
+          },
+          suspension: {
+            title: "Realistic Suspension",
+            desc: "Steadily handle harsh weather, nimbly avoid obstacles, move smoothly with terrain undulations, and calmly decide every challenge on the wilderness journey."
+          },
+          stories: {
+            title: "Unlock Hidden Stories",
+            desc: "Discover abandoned buildings and items during your journey, piece together the history and secrets of this world, and reveal the truth behind the wilderness."
+          },
+          explore: {
+            title: "Explore Vast Wilderness",
+            desc: "Drive through various roads, explore diverse terrains and landscapes, from deserts to forests, from mountains to coasts."
+          }
+        },
+        features: {
+          title: "Game Features",
+          openWorld: {
+            title: "Open World",
+            desc: "Seamlessly connected vast map, free exploration, rich resource points and functional units."
+          },
+          customization: {
+            title: "Vehicle Customization",
+            desc: "Dozens of parts to choose from, build unique vehicles, adapt to different terrains and challenges."
+          },
+          cycle: {
+            title: "Day-Night Cycle",
+            desc: "Realistic weather system and day-night cycle that affect gameplay and visual experience."
+          },
+          freedom: {
+            title: "Freedom of Choice",
+            desc: "Choose your gameplay style, road trip or transport rescue."
+          },
+          npc: {
+            title: "NPC Interaction",
+            desc: "Meet various distinctive characters, accept quests, build relationships, and unlock the world."
+          },
+          achievements: {
+            title: "Achievement System",
+            desc: "Over 50 hidden achievements to challenge your exploration ability and gaming skills."
+          }
+        },
+        community: {
+          title: "Join Our Community",
+          desc: "Join our community to exchange experiences with other players, get the latest game information and exclusive benefits.",
+          qqGroup: {
+            title: "Join Fan Group Now"
+          },
+          bilibili: {
+            title: "Visit Official Account",
+            desc: "Follow for more information"
+          },
+          copyQQ: "<i class='fa fa-copy mr-1'></i>Copy group number",
+          copyBilibili: "<i class='fa fa-copy mr-1'></i>Copy Bilibili URL"
+        },
+        footer: {
+          copyright: "&copy; 2025 Wilderness Road Trip"
+        }
+      },
+      zh: {
+        brand: "浪漫汽车旅",
+        nav: {
+          screenshots: "截图",
+          features: "特色",
+          joinCommunity: "加入社区"
+        },
+        hero: {
+          slogan1: "自由之旅",
+          slogan2: "你的冒险正等待开启",
+          scrollDown: "向下滚动探索"
+        },
+        screenshots: {
+          challenge: {
+            title: "挑战极限地形",
+            desc: "从泥泞的沼泽到陡峭的山路，每一处地形都将考验你和你的车辆，只有真正的强者才能征服一切。"
+          },
+          upgrade: {
+            title: "升级你的座驾",
+            desc: "收集零件，改装车辆，提升性能，适应各种地形挑战，打造你心仪的座驾。"
+          },
+          suspension: {
+            title: "真实悬挂表现",
+            desc: "于恶劣天气中稳健应对，在障碍物前灵活规避，随地形起伏轻盈起舞，于荒野征途上从容决断每一次挑战。"
+          },
+          stories: {
+            title: "解锁隐藏故事",
+            desc: "在旅途中发现废弃的建筑和物品，拼凑出这个世界的历史和秘密，揭示荒野背后的真相。"
+          },
+          explore: {
+            title: "探索广阔荒野",
+            desc: "驾驶载具穿越各种道路，探索多样化的地形和景观，从沙漠到森林，从山脉到海岸。"
+          }
+        },
+        features: {
+          title: "游戏特色",
+          openWorld: {
+            title: "开放世界",
+            desc: "无缝连接的广阔地图，自由探索，丰富的资源点和功能单位。"
+          },
+          customization: {
+            title: "车辆改装",
+            desc: "数十种零件可供选择，打造独特车辆，适应不同地形和挑战。"
+          },
+          cycle: {
+            title: "日夜循环",
+            desc: "真实的天气系统和日夜循环，影响游戏玩法和视觉体验。"
+          },
+          freedom: {
+            title: "随心所欲",
+            desc: "选择你的玩法，公路旅行OR运输救援。"
+          },
+          npc: {
+            title: "NPC互动",
+            desc: "遇到各种性格鲜明的角色，接受任务，建立关系，解锁世界。"
+          },
+          achievements: {
+            title: "成就系统",
+            desc: "超过50个隐藏成就，挑战你的探索能力和游戏技巧。"
+          }
+        },
+        community: {
+          title: "加入我们的社区",
+          desc: "加入我们的社群，与其他玩家交流心得，获取最新游戏资讯和独家福利。",
+          qqGroup: {
+            title: "立即加入粉丝群"
+          },
+          bilibili: {
+            title: "点击前往官方帐号",
+            desc: "关注获取更多信息"
+          },
+          copyQQ: "<i class='fa fa-copy mr-1'></i>复制群号",
+          copyBilibili: "<i class='fa fa-copy mr-1'></i>复制B站主页地址"
+        },
+        footer: {
+          copyright: "&copy; 2025 浪漫汽车旅"
+        }
+      }
+    };
+
+    // 检测用户浏览器语言
+    function detectUserLanguage() {
+      const userLang = navigator.language || navigator.userLanguage;
+      // 如果是中文环境，返回中文，否则返回英文
+      return userLang.includes('zh') ? 'zh' : 'en';
+    }
+
+    // 设置页面语言
+    function setLanguage(lang) {
+      // 更新语言按钮状态
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      
+      // 更新页面内容
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        const translation = getNestedTranslation(translations[lang], key);
+        
+        if (translation) {
+          // 处理包含HTML的内容
+          if (translation.includes('<') && translation.includes('>')) {
+            element.innerHTML = translation;
+          } else {
+            element.textContent = translation;
+          }
+        }
+      });
+      
+      // 保存用户选择的语言
+      localStorage.setItem('preferredLanguage', lang);
+    }
+
+    // 获取嵌套的翻译值
+    function getNestedTranslation(obj, path) {
+      return path.split('.').reduce((acc, part) => {
+        return acc && acc[part] !== undefined ? acc[part] : null;
+      }, obj);
+    }
+
     // 移动端菜单切换
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -582,6 +817,19 @@
     
     // 元素滚动动画和图片懒加载
     document.addEventListener('DOMContentLoaded', () => {
+      // 初始化语言
+      const savedLang = localStorage.getItem('preferredLanguage');
+      const initialLang = savedLang || detectUserLanguage();
+      setLanguage(initialLang);
+      
+      // 语言切换按钮事件
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang');
+          setLanguage(lang);
+        });
+      });
+      
       const animatedElements = document.querySelectorAll('.image-container, .fade-in');
       const lazyImages = document.querySelectorAll('[data-src]');
       
@@ -622,7 +870,10 @@
     function copyQQNumber() {
       const qqNumber = "651886971";
       navigator.clipboard.writeText(qqNumber).then(() => {
-        alert("QQ群号已复制：" + qqNumber);
+        // 根据当前语言显示不同提示
+        const currentLang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
+        const message = currentLang === 'zh' ? "QQ群号已复制：" + qqNumber : "QQ group number copied: " + qqNumber;
+        alert(message);
       }).catch(err => {
         console.error('无法复制文本: ', err);
       });
@@ -632,7 +883,10 @@
     function copyBilibiliUrl() {
       const bilibiliUrl = "https://space.bilibili.com/3546609113630783";
       navigator.clipboard.writeText(bilibiliUrl).then(() => {
-        alert("B站主页地址已复制");
+        // 根据当前语言显示不同提示
+        const currentLang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
+        const message = currentLang === 'zh' ? "B站主页地址已复制" : "Bilibili URL copied";
+        alert(message);
       }).catch(err => {
         console.error('无法复制文本: ', err);
       });

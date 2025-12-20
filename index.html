@@ -206,6 +206,21 @@
       background-color: rgba(251, 114, 153, 0.15);
     }
 
+    .discord-btn {
+      border-color: #5865F2; /* Discord标志性紫色 */
+      color: #5865F2;
+      background-color: rgba(88, 101, 242, 0.1);
+    }
+
+    .discord-btn:hover {
+      background-color: rgba(88, 101, 242, 0.2);
+    }
+
+    .discord-btn::after {
+      background-color: rgba(88, 101, 242, 0.15);
+    }
+
+    
     .feature-card {
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       background-color: rgba(17, 34, 64, 0.7);
@@ -549,7 +564,18 @@
         <button onclick="copyQQNumber()" class="mt-[-1.5rem] text-sm text-primary/80 hover:text-primary transition-colors self-center" data-i18n="community.copyQQ">
           <i class="fa fa-copy mr-1"></i>复制群号
         </button>
-
+        
+        <!-- Discord服务器 -->
+        <a href="https://discord.gg/32SpgdZfw9" target="_blank"
+           class="flex flex-col items-center justify-center discord-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full mt-6">
+          <i class="fa fa-discord text-4xl mb-3"></i>
+          <div class="text-xl font-bold mb-1" data-i18n="community.discord.title">加入Discord社区</div>
+          <div class="text-base text-[#5865F2]/80 mt-2">https://discord.gg/32SpgdZfw9</div>
+        </a>
+        <button onclick="copyDiscordLink()" class="mt-[-1.5rem] text-sm text-[#5865F2]/80 hover:text-[#5865F2] transition-colors self-center" data-i18n="community.copyDiscord">
+          <i class="fa fa-copy mr-1"></i>复制邀请链接
+        </button>
+        
         <!-- 哔哩哔哩官方账号 -->
         <a href="https://space.bilibili.com/3546609113630783" target="_blank"
            class="flex flex-col items-center justify-center bilibili-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
@@ -661,8 +687,14 @@
             title: "Visit Official Account",
             desc: "Follow for more information"
           },
-          copyQQ: "<i class='fa fa-copy mr-1'></i>Copy group number",
-          copyBilibili: "<i class='fa fa-copy mr-1'></i>Copy Bilibili URL"
+
+           discord: {
+            title: "Join Discord Community"
+          },
+          
+           copyQQ: "<i class='fa fa-copy mr-1'></i>Copy group number",
+          copyBilibili: "<i class='fa fa-copy mr-1'></i>Copy Bilibili URL",
+          copyDiscord: "<i class='fa fa-copy mr-1'></i>Copy Discord link"
         },
         footer: {
           copyright: "© 2025 Wilderness Road Trip"
@@ -741,6 +773,7 @@
           },
           copyQQ: "<i class='fa fa-copy mr-1'></i>复制群号",
           copyBilibili: "<i class='fa fa-copy mr-1'></i>复制B站主页地址"
+          copyDiscord: "<i class='fa fa-copy mr-1'></i>复制邀请链接"
         },
         footer: {
           copyright: "© 2025 荒野车旅"
@@ -890,6 +923,17 @@
         // 根据当前语言显示不同提示
         const currentLang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
         const message = currentLang === 'zh' ? "B站主页地址已复制" : "Bilibili URL copied";
+        alert(message);
+      }).catch(err => {
+        console.error('无法复制文本: ', err);
+      });
+    }
+    // 新增Discord复制功能
+    function copyDiscordLink() {
+      const discordUrl = "https://discord.gg/32SpgdZfw9";
+      navigator.clipboard.writeText(discordUrl).then(() => {
+        const currentLang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
+        const message = currentLang === 'zh' ? "Discord邀请链接已复制" : "Discord link copied";
         alert(message);
       }).catch(err => {
         console.error('无法复制文本: ', err);

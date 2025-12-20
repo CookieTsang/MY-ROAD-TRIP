@@ -51,7 +51,9 @@
             dark: '#0a192f',
             accent: '#e6f1ff',
             textColor: '#e6f1ff',
-            bilibili: '#FB7299' // B站粉色
+            bilibili: '#FB7299', // B站粉色
+            discord: '#5865F2', // Discord蓝色
+            steam: '#1b2838' // Steam深蓝色
           }
         }
       }
@@ -206,21 +208,36 @@
       background-color: rgba(251, 114, 153, 0.15);
     }
 
+    /* Discord按钮特殊样式 */
     .discord-btn {
-      border-color: #5865F2; /* Discord标志性紫色 */
+      border-color: #5865F2;
       color: #5865F2;
       background-color: rgba(88, 101, 242, 0.1);
     }
-
+    
     .discord-btn:hover {
       background-color: rgba(88, 101, 242, 0.2);
     }
-
+    
     .discord-btn::after {
       background-color: rgba(88, 101, 242, 0.15);
     }
-
     
+    /* Steam按钮特殊样式 */
+    .steam-btn {
+      border-color: #1b2838;
+      color: #ffffff;
+      background-color: rgba(27, 40, 56, 0.8);
+    }
+    
+    .steam-btn:hover {
+      background-color: rgba(27, 40, 56, 0.9);
+    }
+    
+    .steam-btn::after {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
     .feature-card {
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       background-color: rgba(17, 34, 64, 0.7);
@@ -389,6 +406,22 @@
           <span class="w-8 h-px bg-white/30"></span>
           <span class="text-lg md:text-xl" data-i18n="hero.slogan2">Your Adventure Awaits</span>
         </div>
+        
+        <!-- 社交媒体图标 -->
+        <div class="flex items-center justify-center mt-8 space-x-6">
+          <a href="https://store.steampowered.com/" target="_blank" class="text-white/80 hover:text-white transition-all duration-300 hover:scale-110">
+            <i class="fa fa-steam text-2xl"></i>
+          </a>
+          <a href="https://discord.gg/32SpgdZfw9" target="_blank" class="text-white/80 hover:text-discord transition-all duration-300 hover:scale-110">
+            <i class="fa fa-comments text-2xl"></i>
+          </a>
+          <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=651886971&website=www.oicqzone.com" class="text-white/80 hover:text-primary transition-all duration-300 hover:scale-110">
+            <i class="fa fa-qq text-2xl"></i>
+          </a>
+          <a href="https://space.bilibili.com/3546609113630783" target="_blank" class="text-white/80 hover:text-bilibili transition-all duration-300 hover:scale-110">
+            <i class="fa fa-play-circle text-2xl"></i>
+          </a>
+        </div>
       </div>
     </div>
 
@@ -541,7 +574,7 @@
     </div>
   </section>
 
-  <!-- 社区区域 - 包含QQ群和B站账号 -->
+  <!-- 社区区域 - 包含QQ群、B站账号和Discord服务器 -->
   <section id="download" class="py-16">
     <div class="container mx-auto px-4 text-center">
       <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-in" data-i18n="community.title">
@@ -554,6 +587,25 @@
 
       <!-- 社区链接容器 -->
       <div class="community-links fade-in" style="transition-delay: 0.4s;">
+        <!-- Steam商城 -->
+        <a href="https://store.steampowered.com/" target="_blank"
+           class="flex flex-col items-center justify-center steam-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
+          <i class="fa fa-steam text-4xl mb-3"></i>
+          <div class="text-xl font-bold mb-1" data-i18n="community.steam.title">前往Steam商城</div>
+          <div class="text-base text-gray-300 mt-2" data-i18n="community.steam.desc">了解更多游戏信息</div>
+        </a>
+
+        <!-- Discord服务器 -->
+        <a href="https://discord.gg/32SpgdZfw9" target="_blank"
+           class="flex flex-col items-center justify-center discord-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
+          <i class="fa fa-comments text-4xl mb-3"></i> <!-- 使用评论图标代替Discord图标 -->
+          <div class="text-xl font-bold mb-1" data-i18n="community.discord.title">加入Discord社区</div>
+          <div class="text-base text-gray-300 mt-2" data-i18n="community.discord.desc">与全球玩家交流</div>
+        </a>
+        <button onclick="copyDiscordUrl()" class="mt-[-1.5rem] text-sm text-discord/80 hover:text-discord transition-colors self-center" data-i18n="community.copyDiscord">
+          <i class="fa fa-copy mr-1"></i>复制Discord链接
+        </button>
+
         <!-- QQ粉丝群 -->
         <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=651886971&website=www.oicqzone.com" 
            class="flex flex-col items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
@@ -564,18 +616,7 @@
         <button onclick="copyQQNumber()" class="mt-[-1.5rem] text-sm text-primary/80 hover:text-primary transition-colors self-center" data-i18n="community.copyQQ">
           <i class="fa fa-copy mr-1"></i>复制群号
         </button>
-        
-        <!-- Discord服务器 -->
-        <a href="https://discord.gg/32SpgdZfw9" target="_blank"
-           class="flex flex-col items-center justify-center discord-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full mt-6">
-          <i class="fa fa-discord text-4xl mb-3"></i>
-          <div class="text-xl font-bold mb-1" data-i18n="community.discord.title">加入Discord社区</div>
-          <div class="text-base text-[#5865F2]/80 mt-2">https://discord.gg/32SpgdZfw9</div>
-        </a>
-        <button onclick="copyDiscordLink()" class="mt-[-1.5rem] text-sm text-[#5865F2]/80 hover:text-[#5865F2] transition-colors self-center" data-i18n="community.copyDiscord">
-          <i class="fa fa-copy mr-1"></i>复制邀请链接
-        </button>
-        
+
         <!-- 哔哩哔哩官方账号 -->
         <a href="https://space.bilibili.com/3546609113630783" target="_blank"
            class="flex flex-col items-center justify-center bilibili-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
@@ -687,12 +728,15 @@
             title: "Visit Official Account",
             desc: "Follow for more information"
           },
-
-           discord: {
-            title: "Join Discord Community"
+          discord: {
+            title: "Join Discord Community",
+            desc: "Chat with players worldwide"
           },
-          
-           copyQQ: "<i class='fa fa-copy mr-1'></i>Copy group number",
+          steam: {
+            title: "Visit Steam Store",
+            desc: "Learn more about the game"
+          },
+          copyQQ: "<i class='fa fa-copy mr-1'></i>Copy group number",
           copyBilibili: "<i class='fa fa-copy mr-1'></i>Copy Bilibili URL",
           copyDiscord: "<i class='fa fa-copy mr-1'></i>Copy Discord link"
         },
@@ -771,9 +815,17 @@
             title: "点击前往官方帐号",
             desc: "关注获取更多信息"
           },
+          discord: {
+            title: "加入Discord社区",
+            desc: "与全球玩家交流"
+          },
+          steam: {
+            title: "前往Steam商城",
+            desc: "了解更多游戏信息"
+          },
           copyQQ: "<i class='fa fa-copy mr-1'></i>复制群号",
-          copyBilibili: "<i class='fa fa-copy mr-1'></i>复制B站主页地址"
-          copyDiscord: "<i class='fa fa-copy mr-1'></i>复制邀请链接"
+          copyBilibili: "<i class='fa fa-copy mr-1'></i>复制B站主页地址",
+          copyDiscord: "<i class='fa fa-copy mr-1'></i>复制Discord链接"
         },
         footer: {
           copyright: "© 2025 荒野车旅"
@@ -928,12 +980,14 @@
         console.error('无法复制文本: ', err);
       });
     }
-    // 新增Discord复制功能
-    function copyDiscordLink() {
+
+    // 复制Discord链接功能
+    function copyDiscordUrl() {
       const discordUrl = "https://discord.gg/32SpgdZfw9";
       navigator.clipboard.writeText(discordUrl).then(() => {
+        // 根据当前语言显示不同提示
         const currentLang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
-        const message = currentLang === 'zh' ? "Discord邀请链接已复制" : "Discord link copied";
+        const message = currentLang === 'zh' ? "Discord链接已复制" : "Discord link copied";
         alert(message);
       }).catch(err => {
         console.error('无法复制文本: ', err);

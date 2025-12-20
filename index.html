@@ -369,6 +369,7 @@
       <div class="hidden md:flex items-center space-x-6">
         <a href="#screenshots" class="hover:text-primary transition-colors duration-300" data-i18n="nav.screenshots">截图</a>
         <a href="#features" class="hover:text-primary transition-colors duration-300" data-i18n="nav.features">特色</a>
+        <a href="#store" class="hover:text-primary transition-colors duration-300" data-i18n="nav.store">商城</a>
         <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-2 rounded transition-colors duration-300 btn-hover" data-i18n="nav.joinCommunity">
           加入社区
         </a>
@@ -383,6 +384,7 @@
       <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
         <a href="#screenshots" class="py-2 hover:text-primary transition-colors duration-300" data-i18n="nav.screenshots">截图</a>
         <a href="#features" class="py-2 hover:text-primary transition-colors duration-300" data-i18n="nav.features">特色</a>
+        <a href="#store" class="py-2 hover:text-primary transition-colors duration-300" data-i18n="nav.store">商城</a>
         <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-3 rounded text-center transition-colors duration-300 btn-hover" data-i18n="nav.joinCommunity">
           加入社区
         </a>
@@ -408,18 +410,24 @@
         </div>
         
         <!-- 社交媒体图标 -->
-        <div class="flex items-center justify-center mt-8 space-x-6">
-          <a href="https://store.steampowered.com/" target="_blank" class="text-white/80 hover:text-white transition-all duration-300 hover:scale-110">
-            <i class="fa fa-steam text-2xl"></i>
-          </a>
+        <div class="flex items-center justify-center mt-8 space-x-8">
           <a href="https://discord.gg/32SpgdZfw9" target="_blank" class="text-white/80 hover:text-discord transition-all duration-300 hover:scale-110">
-            <i class="fa fa-comments text-2xl"></i>
+            <i class="fa fa-comment text-2xl"></i>
           </a>
           <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=651886971&website=www.oicqzone.com" class="text-white/80 hover:text-primary transition-all duration-300 hover:scale-110">
             <i class="fa fa-qq text-2xl"></i>
           </a>
           <a href="https://space.bilibili.com/3546609113630783" target="_blank" class="text-white/80 hover:text-bilibili transition-all duration-300 hover:scale-110">
             <i class="fa fa-play-circle text-2xl"></i>
+          </a>
+        </div>
+
+        <!-- 立即加入愿望单按钮 -->
+        <div class="mt-8">
+          <a href="https://store.steampowered.com/" target="_blank"
+             class="inline-flex items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-6 py-3 rounded transition-all duration-300 btn-hover">
+            <i class="fa fa-steam mr-2"></i>
+            <span data-i18n="store.steam.title">加入Steam愿望单</span>
           </a>
         </div>
       </div>
@@ -574,6 +582,30 @@
     </div>
   </section>
 
+  <!-- 商城区域 -->
+  <section id="store" class="py-16 bg-gradient-to-b from-background to-background/90">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-in" data-i18n="store.title">
+        立即加入愿望单
+      </h2>
+
+      <p class="text-gray-300 max-w-2xl mx-auto mb-10 fade-in" style="transition-delay: 0.2s;" data-i18n="store.desc">
+        前往Steam商城，将《Wilderness Road Trip》加入你的愿望单，第一时间获取发售信息。
+      </p>
+
+      <!-- 商城链接容器 -->
+      <div class="store-links fade-in" style="transition-delay: 0.4s;">
+        <!-- Steam商城 -->
+        <a href="https://store.steampowered.com/" target="_blank"
+           class="flex flex-col items-center justify-center steam-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full max-w-md mx-auto">
+          <i class="fa fa-steam text-4xl mb-3"></i>
+          <div class="text-xl font-bold mb-1" data-i18n="store.steam.title">加入Steam愿望单</div>
+          <div class="text-base text-gray-300 mt-2" data-i18n="store.steam.desc">获取游戏发售通知</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- 社区区域 - 包含QQ群、B站账号和Discord服务器 -->
   <section id="download" class="py-16">
     <div class="container mx-auto px-4 text-center">
@@ -587,14 +619,6 @@
 
       <!-- 社区链接容器 -->
       <div class="community-links fade-in" style="transition-delay: 0.4s;">
-        <!-- Steam商城 -->
-        <a href="https://store.steampowered.com/" target="_blank"
-           class="flex flex-col items-center justify-center steam-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
-          <i class="fa fa-steam text-4xl mb-3"></i>
-          <div class="text-xl font-bold mb-1" data-i18n="community.steam.title">前往Steam商城</div>
-          <div class="text-base text-gray-300 mt-2" data-i18n="community.steam.desc">了解更多游戏信息</div>
-        </a>
-
         <!-- Discord服务器 -->
         <a href="https://discord.gg/32SpgdZfw9" target="_blank"
            class="flex flex-col items-center justify-center discord-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
@@ -662,6 +686,7 @@
         nav: {
           screenshots: "Screenshots",
           features: "Features",
+          store: "Store",
           joinCommunity: "Join Community"
         },
         hero: {
@@ -742,6 +767,14 @@
         },
         footer: {
           copyright: "© 2025 Wilderness Road Trip"
+        },
+        store: {
+          title: "Add to Wishlist",
+          desc: "Head to the Steam Store to add 'Wilderness Road Trip' to your wishlist and get notified when it launches.",
+          steam: {
+            title: "Add to Steam Wishlist",
+            desc: "Get notified on launch day"
+          }
         }
       },
       zh: {
@@ -829,6 +862,14 @@
         },
         footer: {
           copyright: "© 2025 荒野车旅"
+        },
+        store: {
+          title: "立即加入愿望单",
+          desc: "前往Steam商城，将《Wilderness Road Trip》加入你的愿望单，第一时间获取发售信息。",
+          steam: {
+            title: "加入Steam愿望单",
+            desc: "获取游戏发售通知"
+          }
         }
       }
     };

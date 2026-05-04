@@ -1,1039 +1,909 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Overland Journey — 荒野车旅</title>
+  <link rel="icon" href="images/Icon.jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- 图片预加载 -->
+  <link rel="preload" as="image" href="images/01_English.jpg" type="image/jpeg" fetchpriority="high">
+  <link rel="preload" as="image" href="images/05_English.gif" type="image/gif">
+  <link rel="preload" as="image" href="images/02_English.png" type="image/jpeg">
+  <link rel="preload" as="image" href="images/03_English.png" type="image/jpeg">
+  <link rel="preload" as="image" href="images/08_English.png" type="image/jpeg">
+  <link rel="preload" as="image" href="images/09_English.png" type="image/jpeg">
+
   <style>
-    html,
+    :root {
+      --canvas: #F2F2F0;
+      --canvas-2: #E8E8E5;
+      --ink: #0A0A0A;
+      --ink-2: #18181B;
+      --muted: #57575A;
+      --hairline: rgba(10,10,10,0.08);
+      --hairline-strong: rgba(10,10,10,0.12);
+      --innerlight: rgba(255,255,255,0.65);
+      --accent: #2D5A3D;
+      --accent-glow: #5A8C6A;
+      --sans: 'Plus Jakarta Sans', 'Geist', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Geist Mono', ui-monospace, monospace;
+      --ease: cubic-bezier(0.32, 0.72, 0, 1);
+      --ease-spring: cubic-bezier(0.16, 1.16, 0.3, 1);
+      --shell-radius: 2.25rem;
+      --core-radius: calc(2.25rem - 0.4rem);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      margin: 0;
-      padding: 0;
+      background:
+        linear-gradient(rgba(242,242,240,0.78), rgba(242,242,240,0.78)),
+        url('images/cover-bg.png') center / cover no-repeat fixed;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-      background: linear-gradient(135deg, #0a192f 0%, #112240 50%, #0a192f 100%);
-      color: #e6f1ff;
     }
+    .wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
 
-    a {
-      color: #64ffda;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    a:hover {
-      color: #a8f7e0;
-    }
-  </style>
-  <title>Wilderness Road Trip</title>
-
-  <link rel="icon" href="images/Icon.jpg" type="images/jpg">
-  <link rel="shortcut icon" href="images/Icon.jpg" type="images/jpg">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-  <!-- 最高优先级预加载1.jpg，其次是其他图片 -->
-  <link rel="preload" as="image" href="images/1.jpg" type="image/jpeg" fetchpriority="high">
-  <link rel="preload" as="image" href="images/7.gif" type="image/gif">
-  <link rel="preload" as="image" href="images/3.jpg" type="image/jpeg">
-  <link rel="preload" as="image" href="images/4.jpg" type="image/jpeg">
-  <link rel="preload" as="image" href="images/5.jpg" type="image/jpeg">
-  <link rel="preload" as="image" href="images/6.jpg" type="image/jpeg">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#64ffda', 
-            secondary: '#10B981', 
-            dark: '#0a192f',
-            accent: '#e6f1ff',
-            textColor: '#e6f1ff',
-            bilibili: '#FB7299', // B站粉色
-            discord: '#5865F2', // Discord蓝色
-            steam: '#1b2838' // Steam深蓝色
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    /* 原有样式保持不变 */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #112240;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #64ffda;
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #a8f7e0;
-    }
-
-    nav {
-      background-color: rgba(10, 25, 47, 0.8);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
-    }
-
-    nav.scrolled {
-      padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-    }
-
-    .image-container {
-      height: 100vh;
-      width: 100%;
-      background-position: center;
-      position: relative;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+    /* ============ AMBIENT MESH ============ */
+    .mesh {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
       overflow: hidden;
     }
-
-    .image-container::before,
-    .image-container::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      height: 100%;
-      width: 10%;
-      z-index: 5;
-      pointer-events: none;
+    .mesh::before, .mesh::after {
+      content: ''; position: absolute; border-radius: 50%; filter: blur(90px);
+      opacity: 0.15; will-change: transform;
     }
-
-    .image-container::before {
-      left: 0;
-      background: linear-gradient(to right, rgba(10, 25, 47, 1), rgba(10, 25, 47, 0));
+    .mesh::before {
+      width: 720px; height: 720px;
+      background: radial-gradient(circle at 30% 30%, var(--accent-glow), transparent 60%);
+      top: -180px; left: -160px;
+      animation: drift1 28s var(--ease) infinite alternate;
     }
-
-    .image-container::after {
-      right: 0;
-      background: linear-gradient(to left, rgba(10, 25, 47, 1), rgba(10, 25, 47, 0));
+    .mesh::after {
+      width: 560px; height: 560px;
+      background: radial-gradient(circle at 60% 60%, #8FB89A, transparent 60%);
+      top: 120px; right: -140px;
+      animation: drift2 36s var(--ease) infinite alternate;
     }
+    @keyframes drift1 { from { transform: translate3d(0,0,0); } to { transform: translate3d(80px, 60px, 0); } }
+    @keyframes drift2 { from { transform: translate3d(0,0,0); } to { transform: translate3d(-60px, 40px, 0); } }
+    @media (prefers-reduced-motion: reduce) { .mesh::before, .mesh::after { animation: none; } }
 
-    .image-container.visible {
-      opacity: 1;
-      transform: translateY(0);
+    main, header, footer { position: relative; z-index: 1; }
+
+    /* ============ FLOATING PILL NAV ============ */
+    .nav-shell {
+      position: sticky; top: 24px; z-index: 50;
+      margin: 24px auto 0;
+      padding: 6px;
+      width: max-content; max-width: calc(100% - 56px);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.42);
+      backdrop-filter: saturate(160%) blur(22px);
+      -webkit-backdrop-filter: saturate(160%) blur(22px);
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.45) inset,
+        0 0 0 1px rgba(10,10,10,0.05),
+        0 12px 36px -18px rgba(10,10,10,0.18);
     }
-
-    .parallax {
-      background-attachment: fixed;
-      background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
-      width: 100%;
-      height: 100%;
+    .nav {
+      display: flex; align-items: center; gap: 18px;
+      padding: 6px 8px 6px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.55);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
     }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    .nav .brand { font-weight: 700; font-size: 16px; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 8px; }
+    .nav .brand-mark {
+      width: 22px; height: 22px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-glow) 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 2px rgba(10,10,10,0.18);
     }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .nav ul { list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; }
+    .nav ul a {
+      display: inline-block; padding: 9px 14px; border-radius: 999px;
+      color: var(--ink); text-decoration: none; font-size: 13px; font-weight: 500;
+      transition: background 300ms var(--ease);
     }
+    .nav ul a:hover { background: rgba(10,10,10,0.05); }
 
-    .zoom-in {
-      animation: zoomIn 15s ease-in-out infinite alternate;
-      background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
-      width: 100%;
-      height: 100%;
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 7px 7px 16px;
+      border-radius: 999px;
+      background: var(--ink); color: var(--canvas);
+      font: 600 13px/1 var(--sans); cursor: pointer; border: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
     }
-
-    @keyframes zoomIn {
-      from {
-        transform: scale(1);
-      }
-      to {
-        transform: scale(1.1);
-      }
+    .pill:hover {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 20px -5px rgba(45, 90, 61, 0.25);
     }
+    .pill .icon-wrap {
+      width: 26px; height: 26px; border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: transform 360ms var(--ease-spring), background 300ms var(--ease);
+    }
+    .pill:hover .icon-wrap { transform: translate(2px, -1px) scale(1.06); background: rgba(255,255,255,0.22); }
+    .pill:active { transform: scale(0.98); }
+    .pill svg { width: 12px; height: 12px; stroke: currentColor; fill: none; }
 
-    .btn-hover {
+    .ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 18px; border-radius: 999px;
+      background: rgba(255,255,255,0.5);
+      box-shadow: inset 0 0 0 1px var(--hairline-strong);
+      font: 500 13.5px/1 var(--sans); color: var(--ink); cursor: pointer; border: none;
+      transition: background 300ms var(--ease), transform 300ms var(--ease);
+    }
+    .ghost:hover { background: rgba(255,255,255,0.85); }
+    .ghost:active { transform: scale(0.98); }
+
+    /* ============ HERO ============ */
+    .hero {
+      min-height: 100dvh;
+      padding: 96px 0 120px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px;
+      background: rgba(255,255,255,0.6);
+      box-shadow: inset 0 0 0 1px var(--hairline);
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .eyebrow .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--accent); box-shadow: 0 0 0 4px rgba(45,90,61,0.18); }
+    .hero h1 {
+      font-size: clamp(48px, 7vw, 92px);
+      font-weight: 800;
+      line-height: 0.96;
+      letter-spacing: -0.038em;
+      margin: 22px 0 28px;
+      max-width: 14ch;
+    }
+    .hero h1 .soft { color: var(--muted); font-weight: 600; }
+    .hero p.lede {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 52ch;
+      margin: 0 0 34px;
+      line-height: 1.55;
+    }
+    .hero .actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+    /* ============ HERO PREVIEW (DOUBLE-BEZEL) ============ */
+    .hero-preview {
       position: relative;
+      padding: 10px;
+      border-radius: var(--shell-radius);
+      background: rgba(255,255,255,0.45);
+      box-shadow:
+        inset 0 1px 0 var(--innerlight),
+        0 0 0 1px var(--hairline),
+        0 30px 60px -28px rgba(10,10,10,0.22),
+        0 12px 24px -16px rgba(10,10,10,0.10);
       overflow: hidden;
-      z-index: 1;
     }
-
-    .btn-hover::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
+    .hero-preview .core {
+      position: relative;
+      border-radius: var(--core-radius);
+      overflow: hidden;
+    }
+    .hero-preview .core img {
       width: 100%;
-      height: 0;
-      background-color: rgba(255, 255, 255, 0.1);
-      transition: height 0.3s ease;
-      z-index: -1;
-    }
-
-    .btn-hover:hover::after {
       height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
-    /* B站按钮特殊样式 */
-    .bilibili-btn {
-      border-color: #FB7299;
-      color: #FB7299;
-      background-color: rgba(251, 114, 153, 0.1);
+    /* ============ SOCIAL ICONS ============ */
+    .social-row {
+      display: flex; gap: 12px; margin-top: 24px;
     }
-    
-    .bilibili-btn:hover {
-      background-color: rgba(251, 114, 153, 0.2);
+    .social-btn {
+      width: 40px; height: 40px; border-radius: 999px;
+      background: rgba(255,255,255,0.5);
+      box-shadow: inset 0 0 0 1px var(--hairline);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--muted); cursor: pointer; border: none;
+      transition: all 300ms var(--ease);
     }
-    
-    .bilibili-btn::after {
-      background-color: rgba(251, 114, 153, 0.15);
-    }
+    .social-btn:hover { background: rgba(255,255,255,0.85); color: var(--ink); transform: translateY(-2px); }
+    .social-btn svg { width: 18px; height: 18px; }
 
-    /* Discord按钮特殊样式 */
-    .discord-btn {
-      border-color: #5865F2;
-      color: #5865F2;
-      background-color: rgba(88, 101, 242, 0.1);
+    /* ============ SECTION DEFAULTS ============ */
+    section.block { padding: 112px 0; position: relative; }
+    .section-head { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; margin-bottom: 56px; }
+    .section-head h2 {
+      font-size: clamp(38px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1;
+      margin: 16px 0 0;
+      max-width: 14ch;
     }
-    
-    .discord-btn:hover {
-      background-color: rgba(88, 101, 242, 0.2);
-    }
-    
-    .discord-btn::after {
-      background-color: rgba(88, 101, 242, 0.15);
-    }
-    
-    /* Steam按钮特殊样式 */
-    .steam-btn {
-      border-color: #1b2838;
-      color: #ffffff;
-      background-color: rgba(27, 40, 56, 0.8);
-    }
-    
-    .steam-btn:hover {
-      background-color: rgba(27, 40, 56, 0.9);
-    }
-    
-    .steam-btn::after {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
+    .section-head p { color: var(--muted); font-size: 16.5px; max-width: 46ch; margin: 0; line-height: 1.55; }
 
-    .feature-card {
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      background-color: rgba(17, 34, 64, 0.7);
-      backdrop-filter: blur(5px);
+    /* ============ BENTO (double-bezel cards) ============ */
+    .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .b-card {
+      padding: 8px;
+      border-radius: var(--shell-radius);
+      background: rgba(255,255,255,0.5);
+      box-shadow:
+        inset 0 1px 0 var(--innerlight),
+        0 0 0 1px var(--hairline),
+        0 24px 48px -28px rgba(10,10,10,0.18);
+      transition: transform 600ms var(--ease), box-shadow 600ms var(--ease);
     }
+    .b-card:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        inset 0 1px 0 var(--innerlight),
+        0 0 0 1px var(--hairline),
+        0 30px 70px -22px rgba(10,10,10,0.22);
+    }
+    .b-card .core {
+      border-radius: var(--core-radius);
+      background: #FCFCFA;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.85), inset 0 0 0 1px var(--hairline);
+      padding: 32px;
+      height: 100%;
+      display: flex; flex-direction: column;
+    }
+    .b-card .meta { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+    .b-card h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; margin: 0 0 10px; }
+    .b-card p { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.55; }
+    .b-card .icon-mark {
+      width: 44px; height: 44px; border-radius: 14px;
+      background: linear-gradient(135deg, rgba(45,90,61,0.1), rgba(90,140,106,0.1));
+      display: grid; place-items: center;
+      margin-bottom: 18px;
+    }
+    .b-card .icon-mark svg { width: 22px; height: 22px; color: var(--accent); }
 
-    .feature-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 10px 25px -5px rgba(100, 255, 218, 0.1), 0 10px 10px -5px rgba(100, 255, 218, 0.04);
-    }
-
-    .feature-icon {
-      transition: transform 0.3s ease;
-    }
-
-    .feature-card:hover .feature-icon {
-      transform: scale(1.15) rotate(5deg);
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-weight: 600;
-      color: #e6f1ff;
-    }
-
-    p {
-      line-height: 1.6;
-    }
-
-    .title-animation {
-      animation: titlePulse 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes titlePulse {
-      from {
-        text-shadow: 0 0 10px rgba(100, 255, 218, 0.7);
-      }
-      to {
-        text-shadow: 0 0 20px rgba(100, 255, 218, 0.9), 0 0 30px rgba(100, 255, 218, 0.5);
-      }
-    }
-
-    .bounce-slow {
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-      }
-      40% {
-        transform: translateY(-20px);
-      }
-      60% {
-        transform: translateY(-10px);
-      }
-    }
-
-    #download {
-      background-color: rgba(17, 34, 64, 0.5);
-    }
-
-    footer {
-      background-color: rgba(10, 25, 47, 0.9);
-      border-top: 1px solid rgba(100, 255, 218, 0.2);
-    }
-
-    .image-placeholder {
-      background-color: #112240;
-      background-image: linear-gradient(45deg, rgba(100, 255, 218, 0.1) 25%, transparent 25%, transparent 50%, rgba(100, 255, 218, 0.1) 50%, rgba(100, 255, 218, 0.1) 75%, transparent 75%, transparent);
-      background-size: 20px 20px;
-    }
-    
-    /* 社区链接容器间距 */
-    .community-links {
+    /* ============ SCREENSHOTS ============ */
+    /* ============ FEATURE SHOWCASE (image + text alternating) ============ */
+    .showcase {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 48px;
+    }
+    .showcase-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .showcase-row.reverse {
+      direction: rtl;
+    }
+    .showcase-row.reverse > * {
+      direction: ltr;
+    }
+    .showcase-img {
+      border-radius: var(--shell-radius);
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px var(--hairline),
+        0 24px 48px -28px rgba(10,10,10,0.18);
+      transition: transform 600ms var(--ease), box-shadow 600ms var(--ease);
+    }
+    .showcase-img:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 0 0 1px var(--hairline),
+        0 30px 70px -22px rgba(10,10,10,0.22);
+    }
+    .showcase-img img {
       width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
+      height: auto;
+      display: block;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
     }
-    
-    /* 语言切换按钮 */
+    .showcase-text {
+      padding: 20px 0;
+    }
+    .showcase-text .num {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .showcase-text h3 {
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin: 0 0 16px;
+    }
+    .showcase-text p {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 40ch;
+      margin: 0;
+    }
+    @media (max-width: 980px) {
+      .showcase-row {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .showcase-row.reverse {
+        direction: ltr;
+      }
+    }
+
+    /* ============ CLOSING (inverted surface) ============ */
+    .closing {
+      padding: 112px 0;
+      margin: 56px 28px 28px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #131313 0%, #050505 100%);
+      color: #F2F2F0;
+      position: relative; overflow: hidden;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 30px 80px -40px rgba(10,10,10,0.6);
+    }
+    .closing::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(700px 360px at 30% 0%, rgba(90,140,106,0.32), transparent 70%);
+      pointer-events: none;
+    }
+    .closing-inner { position: relative; max-width: 1040px; padding: 0 32px; margin: 0 auto; text-align: center; }
+    .closing h2 { font-size: clamp(40px, 5.5vw, 76px); font-weight: 700; letter-spacing: -0.035em; line-height: 1; margin: 0 0 18px; max-width: 18ch; margin-inline: auto; }
+    .closing p { color: rgba(242,242,240,0.65); font-size: 17px; margin: 0 auto 32px; max-width: 48ch; line-height: 1.55; }
+    .closing .pill { background: var(--canvas); color: var(--ink); }
+    .closing .pill .icon-wrap { background: rgba(10,10,10,0.08); }
+
+    /* ============ COMMUNITY ============ */
+    .community-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .community-card {
+      padding: 8px;
+      border-radius: var(--shell-radius);
+      background: rgba(255,255,255,0.5);
+      box-shadow:
+        inset 0 1px 0 var(--innerlight),
+        0 0 0 1px var(--hairline),
+        0 24px 48px -28px rgba(10,10,10,0.18);
+      transition: transform 600ms var(--ease), box-shadow 600ms var(--ease);
+    }
+    .community-card:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        inset 0 1px 0 var(--innerlight),
+        0 0 0 1px var(--hairline),
+        0 30px 70px -22px rgba(10,10,10,0.22);
+    }
+    .community-card .core {
+      border-radius: var(--core-radius);
+      background: #FCFCFA;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.85), inset 0 0 0 1px var(--hairline);
+      padding: 32px;
+      text-align: center;
+    }
+    .community-card .icon-mark {
+      width: 56px; height: 56px; border-radius: 18px;
+      background: linear-gradient(135deg, rgba(45,90,61,0.1), rgba(90,140,106,0.1));
+      display: grid; place-items: center;
+      margin: 0 auto 18px;
+    }
+    .community-card .icon-mark svg { width: 28px; height: 28px; color: var(--accent); }
+    .community-card h3 { font-size: 18px; font-weight: 700; margin: 0 0 6px; }
+    .community-card p { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+    .community-card .copy-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 999px;
+      background: rgba(10,10,10,0.04);
+      box-shadow: inset 0 0 0 1px var(--hairline);
+      font: 500 11px/1 var(--mono); color: var(--muted); cursor: pointer; border: none;
+      letter-spacing: 0.04em;
+      transition: all 300ms var(--ease);
+    }
+    .community-card .copy-btn:hover { background: rgba(10,10,10,0.08); color: var(--ink); }
+    .community-card .copy-btn svg { width: 12px; height: 12px; }
+
+    /* ============ FOOTER ============ */
+    footer {
+      padding: 36px 28px 28px;
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    footer .row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--ink); }
+
+    /* ============ LANGUAGE SWITCH ============ */
     .lang-switch {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 100;
-      display: flex;
-      gap: 8px;
+      position: fixed; top: 24px; right: 24px; z-index: 100;
+      display: flex; gap: 4px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.42);
+      backdrop-filter: saturate(160%) blur(22px);
+      box-shadow: 0 0 0 1px rgba(10,10,10,0.05);
     }
-    
     .lang-btn {
-      background-color: rgba(10, 25, 47, 0.8);
-      border: 1px solid #64ffda;
-      color: #e6f1ff;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      padding: 6px 12px; border-radius: 999px;
+      background: transparent; border: none;
+      font: 500 11px/1 var(--mono); color: var(--muted);
+      cursor: pointer; letter-spacing: 0.04em;
+      transition: all 300ms var(--ease);
     }
-    
     .lang-btn.active {
-      background-color: #64ffda;
-      color: #0a192f;
+      background: var(--ink); color: var(--canvas);
     }
-    
-    .lang-btn:hover:not(.active) {
-      background-color: rgba(100, 255, 218, 0.2);
+    .lang-btn:hover:not(.active) { background: rgba(10,10,10,0.05); }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; padding-top: 64px; padding-bottom: 80px; }
+      .nav ul { display: none; }
+      .section-head { grid-template-columns: 1fr; gap: 18px; }
+      .bento { grid-template-columns: 1fr; }
+      .screenshot-gallery { grid-template-columns: 1fr; }
+      .screenshot-card.wide { grid-column: span 1; }
+      .community-grid { grid-template-columns: 1fr; }
+      .closing { margin: 28px 16px; padding: 80px 0; }
+      .lang-switch { top: 12px; right: 12px; }
+    }
+
+    /* ============ MOTION ENTRY ============ */
+    .reveal { opacity: 0; transform: translateY(18px); filter: blur(6px); transition: opacity 800ms var(--ease), transform 800ms var(--ease), filter 800ms var(--ease); }
+    .reveal.is-in { opacity: 1; transform: none; filter: none; }
+
+    /* Stagger children animation */
+    .reveal.is-in .showcase-row { animation: fadeSlideUp 800ms var(--ease) backwards; }
+    .reveal.is-in .showcase-row:nth-child(1) { animation-delay: 0ms; }
+    .reveal.is-in .showcase-row:nth-child(2) { animation-delay: 100ms; }
+    .reveal.is-in .showcase-row:nth-child(3) { animation-delay: 200ms; }
+    .reveal.is-in .showcase-row:nth-child(4) { animation-delay: 300ms; }
+    .reveal.is-in .showcase-row:nth-child(5) { animation-delay: 400ms; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Floating nav effect */
+    .nav-shell {
+      animation: navFloat 6s ease-in-out infinite;
+    }
+    @keyframes navFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    /* Hover glow on cards */
+    .b-card::after,
+    .community-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(45,90,61,0.1) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 300ms var(--ease);
+      pointer-events: none;
+    }
+    .b-card:hover::after,
+    .community-card:hover::after {
+      opacity: 1;
+    }
+
+    /* Smooth image zoom on hover */
+    .showcase-img img {
+      transition: transform 600ms var(--ease);
+    }
+    .showcase-img:hover img {
+      transform: scale(1.03);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+      .reveal.is-in .showcase-row { animation: none; }
+      .nav-shell { animation: none; }
+      .showcase-img img { transition: none; }
     }
   </style>
 </head>
+<body>
+  <div class="mesh" aria-hidden="true"></div>
 
-<body class="font-sans">
-  <!-- 语言切换按钮 -->
+  <!-- 语言切换 -->
   <div class="lang-switch">
-    <button class="lang-btn" data-lang="en">EN</button>
     <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
   </div>
 
-  <!-- 导航栏部分 -->
-  <nav id="main-nav" class="fixed top-0 left-0 w-full z-50">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center">
-        <i class="fa fa-car text-primary text-xl mr-2 transition-transform duration-300 hover:rotate-12"></i>
-        <span class="text-lg font-medium" data-i18n="brand">荒野车旅</span>
-      </div>
+  <!-- 浮动导航 -->
+  <div class="nav-shell">
+    <header class="nav">
+      <span class="brand"><span class="brand-mark"></span><span data-i18n="brand">Overland Journey</span></span>
+      <ul>
+        <li><a href="#features" data-i18n="nav.features">特色</a></li>
+        <li><a href="#store" data-i18n="nav.store">商城</a></li>
+        <li><a href="#community" data-i18n="nav.community">社区</a></li>
+      </ul>
+      <a href="https://store.steampowered.com/app/3963730/_/" target="_blank" class="pill">
+        <span data-i18n="nav.wishlist">加入愿望单</span>
+        <span class="icon-wrap"><svg viewBox="0 0 12 12" stroke-width="1.6"><path d="M2.5 6h7M6 2.5L9.5 6 6 9.5"/></svg></span>
+      </a>
+    </header>
+  </div>
 
-      <div class="hidden md:flex items-center space-x-6">
-        <a href="#screenshots" class="hover:text-primary transition-colors duration-300" data-i18n="nav.screenshots">截图</a>
-        <a href="#features" class="hover:text-primary transition-colors duration-300" data-i18n="nav.features">特色</a>
-        <a href="#store" class="hover:text-primary transition-colors duration-300" data-i18n="nav.store">商城</a>
-        <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-2 rounded transition-colors duration-300 btn-hover" data-i18n="nav.joinCommunity">
-          加入社区
-        </a>
-      </div>
-
-      <button id="menu-toggle" class="md:hidden text-gray-300 focus:outline-none">
-        <i class="fa fa-bars text-xl"></i>
-      </button>
-    </div>
-
-    <div id="mobile-menu" class="hidden md:hidden bg-dark/90 backdrop-filter: blur(10px) shadow-lg">
-      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
-        <a href="#screenshots" class="py-2 hover:text-primary transition-colors duration-300" data-i18n="nav.screenshots">截图</a>
-        <a href="#features" class="py-2 hover:text-primary transition-colors duration-300" data-i18n="nav.features">特色</a>
-        <a href="#store" class="py-2 hover:text-primary transition-colors duration-300" data-i18n="nav.store">商城</a>
-        <a href="#download" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-4 py-3 rounded text-center transition-colors duration-300 btn-hover" data-i18n="nav.joinCommunity">
-          加入社区
-        </a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- 英雄区域 - 1.jpg拥有最高加载优先级 -->
-  <section id="hero" class="image-container visible">
-    <div class="absolute inset-0 bg-black/30"></div>
-    <div class="absolute inset-0 zoom-in" data-src="images/1.jpg" style="background-image: url('images/1.jpg');"></div>
-    
-    <div class="absolute inset-0 flex items-center justify-center z-10 px-4">
-      <div class="flex flex-col items-center text-center">
-        <h1 class="text-6xl md:text-8xl font-bold text-white leading-tight title-animation">
-          Wilderness Road Trip
-        </h1>
-        
-        <div class="flex items-center justify-center mt-4 space-x-3 text-white/90">
-          <span class="text-lg md:text-xl" data-i18n="hero.slogan1">A Journey of Freedom</span>
-          <span class="w-8 h-px bg-white/30"></span>
-          <span class="text-lg md:text-xl" data-i18n="hero.slogan2">Your Adventure Awaits</span>
-        </div>
-        
-        <!-- 社交媒体图标 -->
-        <div class="flex items-center justify-center mt-8 space-x-8">
-          <a href="https://discord.gg/32SpgdZfw9" target="_blank" class="text-white/80 hover:text-discord transition-all duration-300 hover:scale-110">
-            <i class="fa fa-comment text-2xl"></i>
+  <main>
+    <!-- HERO -->
+    <section class="wrap hero reveal">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="dot"></span><span data-i18n="hero.eyebrow">DRIVING · SURVIVAL · SIMULATION</span></span>
+        <h1><span data-i18n="hero.title">Overland</span> <span class="soft" data-i18n="hero.titleSoft">Journey</span></h1>
+        <p class="lede" data-i18n="hero.lede">驾驶汽车或卡车穿越未知地形，管理燃料和物资，尽可能多地携带资源来升级你的车辆，深入探索荒野。</p>
+        <div class="actions">
+          <a href="https://store.steampowered.com/app/3963730/_/" target="_blank" class="pill">
+            <span data-i18n="hero.cta">加入Steam愿望单</span>
+            <span class="icon-wrap"><svg viewBox="0 0 12 12" stroke-width="1.6"><path d="M2.5 6h7M6 2.5L9.5 6 6 9.5"/></svg></span>
           </a>
-          <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=651886971&website=www.oicqzone.com" class="text-white/80 hover:text-primary transition-all duration-300 hover:scale-110">
-            <i class="fa fa-qq text-2xl"></i>
+          <a href="#features" class="ghost" data-i18n="hero.cta2">了解游戏特色</a>
+        </div>
+        <div class="social-row">
+          <a href="https://discord.gg/32SpgdZfw9" target="_blank" class="social-btn" title="Discord">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
           </a>
-          <a href="https://space.bilibili.com/3546609113630783" target="_blank" class="text-white/80 hover:text-bilibili transition-all duration-300 hover:scale-110">
-            <i class="fa fa-play-circle text-2xl"></i>
+          <a href="https://space.bilibili.com/3546609113630783" target="_blank" class="social-btn" title="Bilibili">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.659.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906L17.813 4.653zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.787 1.894v7.52c.018.764.281 1.395.787 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.787-1.893v-7.52c-.018-.764-.281-1.396-.787-1.894-.507-.497-1.134-.755-1.88-.773H5.333zm4 5.146c.326 0 .6.116.82.347.219.231.329.514.329.851 0 .337-.11.62-.329.851-.22.231-.494.347-.82.347-.326 0-.6-.116-.82-.347a1.172 1.172 0 0 1-.329-.851c0-.337.11-.62.329-.851.22-.231.494-.347.82-.347zm5.334 0c.326 0 .6.116.82.347.219.231.329.514.329.851 0 .337-.11.62-.329.851-.22.231-.494.347-.82.347-.326 0-.6-.116-.82-.347a1.172 1.172 0 0 1-.329-.851c0-.337.11-.62.329-.851.22-.231.494-.347.82-.347z"/></svg>
           </a>
-        </div>
-
-        <!-- 立即加入愿望单按钮 -->
-        <div class="mt-8">
-          <a href="https://store.steampowered.com/" target="_blank"
-             class="inline-flex items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-6 py-3 rounded transition-all duration-300 btn-hover">
-            <i class="fa fa-steam mr-2"></i>
-            <span data-i18n="store.steam.title">加入Steam愿望单</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 bounce-slow">
-     <a href="#screenshots" class="text-white/80 hover:text-white transition-colors duration-300 flex flex-col items-center">
-      <i class="fa fa-chevron-down text-2xl"></i>
-      <p class="mt-2 text-sm text-center" data-i18n="hero.scrollDown">向下滚动探索</p>
-    </a>
-    </div>
-  </section>
-
-  <!-- 截图展示区 -->
-  <section id="screenshots" class="mt-[-5px]">
-    <div class="image-container">
-      <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax image-placeholder" data-src="images/7.gif"></div>
-      <div class="absolute bottom-0 right-0 p-6 md:p-10 z-10 max-w-xl fade-in text-right">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.challenge.title">
-          挑战极限地形
-        </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.challenge.desc">
-          从泥泞的沼泽到陡峭的山路，每一处地形都将考验你和你的车辆，只有真正的强者才能征服一切。
-        </p>
-      </div>
-    </div>
-  </section>
-
-    <div class="image-container">
-      <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax image-placeholder" data-src="images/3.jpg"></div>
-      <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.upgrade.title">
-          升级你的座驾
-        </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.upgrade.desc">
-          收集零件，改装车辆，提升性能，适应各种地形挑战，打造你心仪的座驾。
-        </p>
-      </div>
-    </div>
-
-    <div class="image-container">
-      <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax image-placeholder" data-src="images/4.jpg"></div>
-      <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.suspension.title">
-          真实悬挂表现
-        </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.suspension.desc">
-          于恶劣天气中稳健应对，在障碍物前灵活规避，随地形起伏轻盈起舞，于荒野征途上从容决断每一次挑战。
-        </p>
-      </div>
-    </div>
-
-    <div class="image-container">
-      <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax image-placeholder" data-src="images/5.jpg"></div>
-      <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.stories.title">
-          解锁隐藏故事
-        </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.stories.desc">
-          在旅途中发现废弃的建筑和物品，拼凑出这个世界的历史和秘密，揭示荒野背后的真相。
-        </p>
-      </div>
-    </div>
-
-    <div class="image-container">
-      <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-      <div class="absolute inset-0 parallax image-placeholder" data-src="images/6.jpg"></div>
-      <div class="absolute bottom-0 left-0 p-6 md:p-10 z-10 max-w-xl fade-in">
-        <h2 class="text-2xl md:text-5xl font-bold text-white mb-4" data-i18n="screenshots.explore.title">
-         探索广阔荒野
-        </h2>
-        <p class="text-xl md:text-2xl text-white/80 mb-4" data-i18n="screenshots.explore.desc">
-          驾驶载具穿越各种道路，探索多样化的地形和景观，从沙漠到森林，从山脉到海岸。
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 游戏特色部分 -->
-  <section id="features" class="py-16">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 fade-in" data-i18n="features.title">
-        游戏特色
-      </h2>
-      <div class="w-24 h-1 bg-primary mx-auto mb-12 fade-in" style="transition-delay: 0.2s;"></div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="p-6 rounded-lg shadow hover:shadow-lg transition-all duration-300 feature-card fade-in border border-primary/20">
-          <div class="text-primary text-3xl mb-4 feature-icon">
-            <i class="fa fa-map-o"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3" data-i18n="features.openWorld.title">开放世界</h3>
-          <p class="text-gray-300" data-i18n="features.openWorld.desc">
-            无缝连接的广阔地图，自由探索，丰富的资源点和功能单位。
-          </p>
-        </div>
-
-        <div class="p-6 rounded-lg shadow hover:shadow-lg transition-all duration-300 feature-card fade-in border border-primary/20" style="transition-delay: 0.1s;">
-          <div class="text-primary text-3xl mb-4 feature-icon">
-            <i class="fa fa-wrench"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3" data-i18n="features.customization.title">车辆改装</h3>
-          <p class="text-gray-300" data-i18n="features.customization.desc">
-            数十种零件可供选择，打造独特车辆，适应不同地形和挑战。
-          </p>
-        </div>
-
-        <div class="p-6 rounded-lg shadow hover:shadow-lg transition-all duration-300 feature-card fade-in border border-primary/20" style="transition-delay: 0.2s;">
-          <div class="text-primary text-3xl mb-4 feature-icon">
-            <i class="fa fa-moon-o"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3" data-i18n="features.cycle.title">日夜循环</h3>
-          <p class="text-gray-300" data-i18n="features.cycle.desc">
-            真实的天气系统和日夜循环，影响游戏玩法和视觉体验。
-          </p>
-        </div>
-
-        <div class="p-6 rounded-lg shadow hover:shadow-lg transition-all duration-300 feature-card fade-in border border-primary/20" style="transition-delay: 0.3s;">
-          <div class="text-primary text-3xl mb-4 feature-icon">
-            <i class="fa fa-book"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3" data-i18n="features.freedom.title">随心所欲</h3>
-          <p class="text-gray-300" data-i18n="features.freedom.desc">
-            选择你的玩法，公路旅行OR运输救援。
-          </p>
-        </div>
-
-        <div class="p-6 rounded-lg shadow hover:shadow-lg transition-all duration-300 feature-card fade-in border border-primary/20" style="transition-delay: 0.4s;">
-          <div class="text-primary text-3xl mb-4 feature-icon">
-            <i class="fa fa-users"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3" data-i18n="features.npc.title">NPC互动</h3>
-          <p class="text-gray-300" data-i18n="features.npc.desc">
-            遇到各种性格鲜明的角色，接受任务，建立关系，解锁世界。
-          </p>
-        </div>
-
-        <div class="p-6 rounded-lg shadow hover:shadow-lg transition-all duration-300 feature-card fade-in border border-primary/20" style="transition-delay: 0.5s;">
-          <div class="text-primary text-3xl mb-4 feature-icon">
-            <i class="fa fa-trophy"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3" data-i18n="features.achievements.title">成就系统</h3>
-          <p class="text-gray-300" data-i18n="features.achievements.desc">
-            超过50个隐藏成就，挑战你的探索能力和游戏技巧。
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 商城区域 -->
-  <section id="store" class="py-16 bg-gradient-to-b from-background to-background/90">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-in" data-i18n="store.title">
-        立即加入愿望单
-      </h2>
-
-      <p class="text-gray-300 max-w-2xl mx-auto mb-10 fade-in" style="transition-delay: 0.2s;" data-i18n="store.desc">
-        前往Steam商城，将《Wilderness Road Trip》加入你的愿望单，第一时间获取发售信息。
-      </p>
-
-      <!-- 商城链接容器 -->
-      <div class="store-links fade-in" style="transition-delay: 0.4s;">
-        <!-- Steam商城 -->
-        <a href="https://store.steampowered.com/" target="_blank"
-           class="flex flex-col items-center justify-center steam-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full max-w-md mx-auto">
-          <i class="fa fa-steam text-4xl mb-3"></i>
-          <div class="text-xl font-bold mb-1" data-i18n="store.steam.title">加入Steam愿望单</div>
-          <div class="text-base text-gray-300 mt-2" data-i18n="store.steam.desc">获取游戏发售通知</div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 社区区域 - 包含QQ群、B站账号和Discord服务器 -->
-  <section id="download" class="py-16">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-in" data-i18n="community.title">
-        加入我们的社区
-      </h2>
-
-      <p class="text-gray-300 max-w-2xl mx-auto mb-10 fade-in" style="transition-delay: 0.2s;" data-i18n="community.desc">
-        加入我们的社群，与其他玩家交流心得，获取最新游戏资讯和独家福利。
-      </p>
-
-      <!-- 社区链接容器 -->
-      <div class="community-links fade-in" style="transition-delay: 0.4s;">
-        <!-- Discord服务器 -->
-        <a href="https://discord.gg/32SpgdZfw9" target="_blank"
-           class="flex flex-col items-center justify-center discord-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
-          <i class="fa fa-comments text-4xl mb-3"></i> <!-- 使用评论图标代替Discord图标 -->
-          <div class="text-xl font-bold mb-1" data-i18n="community.discord.title">加入Discord社区</div>
-          <div class="text-base text-gray-300 mt-2" data-i18n="community.discord.desc">与全球玩家交流</div>
-        </a>
-        <button onclick="copyDiscordUrl()" class="mt-[-1.5rem] text-sm text-discord/80 hover:text-discord transition-colors self-center" data-i18n="community.copyDiscord">
-          <i class="fa fa-copy mr-1"></i>复制Discord链接
-        </button>
-
-        <!-- QQ粉丝群 -->
-        <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=651886971&website=www.oicqzone.com" 
-           class="flex flex-col items-center justify-center bg-primary/20 hover:bg-primary/30 text-primary border border-primary px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
-          <i class="fa fa-qq text-4xl mb-3"></i>
-          <div class="text-xl font-bold mb-1" data-i18n="community.qqGroup.title">立即加入粉丝群</div>
-          <div class="text-2xl font-mono mt-2">651886971</div>
-        </a>
-        <button onclick="copyQQNumber()" class="mt-[-1.5rem] text-sm text-primary/80 hover:text-primary transition-colors self-center" data-i18n="community.copyQQ">
-          <i class="fa fa-copy mr-1"></i>复制群号
-        </button>
-
-        <!-- 哔哩哔哩官方账号 -->
-        <a href="https://space.bilibili.com/3546609113630783" target="_blank"
-           class="flex flex-col items-center justify-center bilibili-btn border px-8 py-6 rounded transition-all duration-300 btn-hover w-full">
-          <i class="fa fa-play-circle text-4xl mb-3"></i> <!-- 使用播放图标代替B站图标 -->
-          <div class="text-xl font-bold mb-1" data-i18n="community.bilibili.title">点击前往官方帐号</div>
-          <div class="text-base text-gray-300 mt-2" data-i18n="community.bilibili.desc">关注获取更多信息</div>
-        </a>
-        <button onclick="copyBilibiliUrl()" class="mt-[-1.5rem] text-sm text-bilibili/80 hover:text-bilibili transition-colors self-center" data-i18n="community.copyBilibili">
-          <i class="fa fa-copy mr-1"></i>复制B站主页地址
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 页脚部分 - 只保留Steam图标 -->
-  <footer class="py-8">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="flex items-center mb-4 md:mb-0">
-          <i class="fa fa-car text-primary text-xl mr-2 transition-transform duration-300 hover:rotate-12"></i>
-          <span class="text-lg font-medium" data-i18n="brand">Wilderness Road Trip</span>
-        </div>
-
-        <!-- 只保留Steam图标 -->
-        <div class="flex space-x-4 mb-4 md:mb-0">
-          <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
-            <i class="fa fa-steam text-xl"></i> <!-- Steam -->
+          <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=651886971&website=www.oicqzone.com" class="social-btn" title="QQ">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.5 14.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm1.5-2.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm-3 2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm-3 0c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm-1.5-2.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm-1.5-2.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm9-4c0-3.31-2.69-6-6-6s-6 2.69-6 6c0 1.66.68 3.16 1.76 4.24l-.71.71C4.67 12.57 4 11.12 4 9.5 4 5.91 7.36 3 11.5 3S19 5.91 19 9.5c0 1.62-.67 3.07-1.76 3.45l-.71-.71C17.32 11.16 18 9.66 18 8z"/></svg>
           </a>
         </div>
       </div>
 
-      <div class="text-center text-gray-500 text-sm mt-4">
-        <p data-i18n="footer.copyright">© 2025 Wilderness Road Trip</p>
+      <aside class="hero-preview">
+        <div class="core">
+          <img src="images/01_English.jpg" alt="Overland Journey 游戏截图" loading="eager">
+        </div>
+      </aside>
+    </section>
+
+    <!-- FEATURES & SCREENSHOTS -->
+    <section class="block reveal" id="features">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow"><span class="dot"></span><span data-i18n="features.eyebrow">01 · 游戏特色</span></span>
+          <p data-i18n="features.desc">驾驶、燃料管理、资源运输、车辆改装、深入探索——一场沉浸式的荒野驾驶体验。</p>
+        </div>
+        <div class="section-head" style="margin-bottom: 56px;">
+          <h2 data-i18n="features.title">核心玩法</h2>
+          <span></span>
+        </div>
+
+        <div class="showcase">
+          <!-- 1. Driving -->
+          <div class="showcase-row">
+            <div class="showcase-img">
+              <img src="images/05_English.gif" alt="驾驶穿越" loading="lazy">
+            </div>
+            <div class="showcase-text">
+              <div class="num">01</div>
+              <h3 data-i18n="features.driving.title">驾驶体验</h3>
+              <p data-i18n="features.driving.desc">驾驶汽车或卡车穿越各种未知地形，感受真实的驾驶体验。从平坦的公路到崎岖的山路，每一段旅程都充满挑战。</p>
+            </div>
+          </div>
+
+          <!-- 2. Fuel Management -->
+          <div class="showcase-row reverse">
+            <div class="showcase-img">
+              <img src="images/02_English.png" alt="燃料管理" loading="lazy">
+            </div>
+            <div class="showcase-text">
+              <div class="num">02</div>
+              <h3 data-i18n="features.fuel.title">燃料管理</h3>
+              <p data-i18n="features.fuel.desc">合理规划路线和燃料消耗，在荒野中寻找补给站。每一次加油都是策略决策，确保你的旅途不会中断。</p>
+            </div>
+          </div>
+
+          <!-- 3. Resource Transport -->
+          <div class="showcase-row">
+            <div class="showcase-img">
+              <img src="images/03_English.png" alt="资源运输" loading="lazy">
+            </div>
+            <div class="showcase-text">
+              <div class="num">03</div>
+              <h3 data-i18n="features.resources.title">资源运输</h3>
+              <p data-i18n="features.resources.desc">尽可能多地携带资源，合理分配载重。将宝贵的物资运送到目的地，为你的冒险积累财富。</p>
+            </div>
+          </div>
+
+          <!-- 4. Vehicle Upgrade -->
+          <div class="showcase-row reverse">
+            <div class="showcase-img">
+              <img src="images/08_English.png" alt="车辆升级" loading="lazy">
+            </div>
+            <div class="showcase-text">
+              <div class="num">04</div>
+              <h3 data-i18n="features.upgrade.title">车辆升级</h3>
+              <p data-i18n="features.upgrade.desc">用收集的资源升级你的车辆，提升性能，适应更艰难的地形。每一次升级都让你能走得更远。</p>
+            </div>
+          </div>
+
+          <!-- 5. Deep Exploration -->
+          <div class="showcase-row">
+            <div class="showcase-img">
+              <img src="images/09_English.png" alt="深入探索" loading="lazy">
+            </div>
+            <div class="showcase-text">
+              <div class="num">05</div>
+              <h3 data-i18n="features.explore.title">深入探索</h3>
+              <p data-i18n="features.explore.desc">探索未知的荒野深处，发现新的区域和隐藏的秘密。每一条路都通向新的发现。</p>
+            </div>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section class="block reveal" id="community">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow"><span class="dot"></span><span data-i18n="community.eyebrow">03 · 社区</span></span>
+          <p data-i18n="community.desc">加入我们的社群，与其他玩家交流驾驶心得，获取游戏最新动态。</p>
+        </div>
+        <div class="section-head" style="margin-bottom: 56px;">
+          <h2 data-i18n="community.title">加入社区</h2>
+          <span></span>
+        </div>
+
+        <div class="community-grid">
+          <div class="community-card">
+            <div class="core">
+              <div class="icon-mark">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+              </div>
+              <h3 data-i18n="community.discord.title">Discord 社区</h3>
+              <p data-i18n="community.discord.desc">与全球玩家交流</p>
+              <button class="copy-btn" onclick="copyToClipboard('https://discord.gg/32SpgdZfw9', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span data-i18n="community.copy">复制链接</span>
+              </button>
+            </div>
+          </div>
+          <div class="community-card">
+            <div class="core">
+              <div class="icon-mark">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.5 14.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm1.5-2.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm-3 2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm-3 0c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm-1.5-2.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm-1.5-2.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm9-4c0-3.31-2.69-6-6-6s-6 2.69-6 6c0 1.66.68 3.16 1.76 4.24l-.71.71C4.67 12.57 4 11.12 4 9.5 4 5.91 7.36 3 11.5 3S19 5.91 19 9.5c0 1.62-.67 3.07-1.76 3.45l-.71-.71C17.32 11.16 18 9.66 18 8z"/></svg>
+              </div>
+              <h3 data-i18n="community.qq.title">QQ 粉丝群</h3>
+              <p style="font-family: var(--mono); font-size: 18px; color: var(--accent); margin: 8px 0 16px;">651886971</p>
+              <button class="copy-btn" onclick="copyToClipboard('651886971', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span data-i18n="community.copyQQ">复制群号</span>
+              </button>
+            </div>
+          </div>
+          <div class="community-card">
+            <div class="core">
+              <div class="icon-mark">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.659.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906L17.813 4.653zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.787 1.894v7.52c.018.764.281 1.395.787 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.787-1.893v-7.52c-.018-.764-.281-1.396-.787-1.894-.507-.497-1.134-.755-1.88-.773H5.333zm4 5.146c.326 0 .6.116.82.347.219.231.329.514.329.851 0 .337-.11.62-.329.851-.22.231-.494.347-.82.347-.326 0-.6-.116-.82-.347a1.172 1.172 0 0 1-.329-.851c0-.337.11-.62.329-.851.22-.231.494-.347.82-.347zm5.334 0c.326 0 .6.116.82.347.219.231.329.514.329.851 0 .337-.11.62-.329.851-.22.231-.494.347-.82.347-.326 0-.6-.116-.82-.347a1.172 1.172 0 0 1-.329-.851c0-.337.11-.62.329-.851.22-.231.494-.347.82-.347z"/></svg>
+              </div>
+              <h3 data-i18n="community.bilibili.title">B站官方帐号</h3>
+              <p data-i18n="community.bilibili.desc">关注获取更多信息</p>
+              <button class="copy-btn" onclick="copyToClipboard('https://space.bilibili.com/3546609113630783', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span data-i18n="community.copyBilibili">复制链接</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLOSING CTA -->
+    <section class="closing reveal" id="store">
+      <div class="closing-inner">
+        <h2 data-i18n="store.title">立即加入愿望单</h2>
+        <p data-i18n="store.desc">前往Steam商城，将《Overland Journey》加入你的愿望单，第一时间获取发售信息。</p>
+        <a href="https://store.steampowered.com/app/3963730/_/" target="_blank" class="pill">
+          <span data-i18n="store.cta">前往 Steam 商城</span>
+          <span class="icon-wrap"><svg viewBox="0 0 12 12" stroke-width="1.6"><path d="M2.5 6h7M6 2.5L9.5 6 6 9.5"/></svg></span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="row">
+      <span>Overland Journey · 2025 · TrailRoam Games</span>
+      <span><a href="https://store.steampowered.com/app/3963730/_/" target="_blank">Steam</a> · <a href="https://discord.gg/32SpgdZfw9" target="_blank">Discord</a> · <a href="https://space.bilibili.com/3546609113630783" target="_blank">Bilibili</a></span>
     </div>
   </footer>
 
   <script>
     // 语言文本映射
     const translations = {
-      en: {
-        brand: "Wilderness Road Trip",
-        nav: {
-          screenshots: "Screenshots",
-          features: "Features",
-          store: "Store",
-          joinCommunity: "Join Community"
-        },
-        hero: {
-          slogan1: "A Journey of Freedom",
-          slogan2: "Your Adventure Awaits",
-          scrollDown: "Scroll down to explore"
-        },
-        screenshots: {
-          challenge: {
-            title: "Conquer Extreme Terrain",
-            desc: "From muddy swamps to steep mountain roads, every terrain will test you and your vehicle. Only the truly strong can conquer everything."
-          },
-          upgrade: {
-            title: "Upgrade Your Vehicle",
-            desc: "Collect parts, modify your vehicle, improve performance, adapt to various terrain challenges, and build your dream ride."
-          },
-          suspension: {
-            title: "Realistic Suspension",
-            desc: "Steadily handle harsh weather, nimbly avoid obstacles, move smoothly with terrain undulations, and calmly decide every challenge on the wilderness journey."
-          },
-          stories: {
-            title: "Unlock Hidden Stories",
-            desc: "Discover abandoned buildings and items during your journey, piece together the history and secrets of this world, and reveal the truth behind the wilderness."
-          },
-          explore: {
-            title: "Explore Vast Wilderness",
-            desc: "Drive through various roads, explore diverse terrains and landscapes, from deserts to forests, from mountains to coasts."
-          }
-        },
-        features: {
-          title: "Game Features",
-          openWorld: {
-            title: "Open World",
-            desc: "Seamlessly connected vast map, free exploration, rich resource points and functional units."
-          },
-          customization: {
-            title: "Vehicle Customization",
-            desc: "Dozens of parts to choose from, build unique vehicles, adapt to different terrains and challenges."
-          },
-          cycle: {
-            title: "Day-Night Cycle",
-            desc: "Realistic weather system and day-night cycle that affect gameplay and visual experience."
-          },
-          freedom: {
-            title: "Freedom of Choice",
-            desc: "Choose your gameplay style, road trip or transport rescue."
-          },
-          npc: {
-            title: "NPC Interaction",
-            desc: "Meet various distinctive characters, accept quests, build relationships, and unlock the world."
-          },
-          achievements: {
-            title: "Achievement System",
-            desc: "Over 50 hidden achievements to challenge your exploration ability and gaming skills."
-          }
-        },
-        community: {
-          title: "Join Our Community",
-          desc: "Join our community to exchange experiences with other players, get the latest game information and exclusive benefits.",
-          qqGroup: {
-            title: "Join Fan Group Now"
-          },
-          bilibili: {
-            title: "Visit Official Account",
-            desc: "Follow for more information"
-          },
-          discord: {
-            title: "Join Discord Community",
-            desc: "Chat with players worldwide"
-          },
-          steam: {
-            title: "Visit Steam Store",
-            desc: "Learn more about the game"
-          },
-          copyQQ: "<i class='fa fa-copy mr-1'></i>Copy group number",
-          copyBilibili: "<i class='fa fa-copy mr-1'></i>Copy Bilibili URL",
-          copyDiscord: "<i class='fa fa-copy mr-1'></i>Copy Discord link"
-        },
-        footer: {
-          copyright: "© 2025 Wilderness Road Trip"
-        },
-        store: {
-          title: "Add to Wishlist",
-          desc: "Head to the Steam Store to add 'Wilderness Road Trip' to your wishlist and get notified when it launches.",
-          steam: {
-            title: "Add to Steam Wishlist",
-            desc: "Get notified on launch day"
-          }
-        }
-      },
       zh: {
-        brand: "荒野车旅",
-        nav: {
-          screenshots: "截图",
-          features: "特色",
-          joinCommunity: "加入社区"
-        },
+        brand: "Overland Journey",
+        nav: { features: "特色", store: "商城", community: "社区", wishlist: "加入愿望单" },
         hero: {
-          slogan1: "自由之旅",
-          slogan2: "你的冒险正等待开启",
-          scrollDown: "向下滚动探索"
-        },
-        screenshots: {
-          challenge: {
-            title: "挑战极限地形",
-            desc: "从泥泞的沼泽到陡峭的山路，每一处地形都将考验你和你的车辆，只有真正的强者才能征服一切。"
-          },
-          upgrade: {
-            title: "升级你的座驾",
-            desc: "收集零件，改装车辆，提升性能，适应各种地形挑战，打造你心仪的座驾。"
-          },
-          suspension: {
-            title: "真实悬挂表现",
-            desc: "于恶劣天气中稳健应对，在障碍物前灵活规避，随地形起伏轻盈起舞，于荒野征途上从容决断每一次挑战。"
-          },
-          stories: {
-            title: "解锁隐藏故事",
-            desc: "在旅途中发现废弃的建筑和物品，拼凑出这个世界的历史和秘密，揭示荒野背后的真相。"
-          },
-          explore: {
-            title: "探索广阔荒野",
-            desc: "驾驶载具穿越各种道路，探索多样化的地形和景观，从沙漠到森林，从山脉到海岸。"
-          }
+          eyebrow: "DRIVING · SURVIVAL · SIMULATION",
+          title: "Overland",
+          titleSoft: "Journey",
+          lede: "驾驶汽车或卡车穿越未知地形，管理燃料和物资，尽可能多地携带资源来升级你的车辆，深入探索荒野。",
+          cta: "加入Steam愿望单",
+          cta2: "了解游戏特色"
         },
         features: {
-          title: "游戏特色",
-          openWorld: {
-            title: "开放世界",
-            desc: "无缝连接的广阔地图，自由探索，丰富的资源点和功能单位。"
-          },
-          customization: {
-            title: "车辆改装",
-            desc: "数十种零件可供选择，打造独特车辆，适应不同地形和挑战。"
-          },
-          cycle: {
-            title: "日夜循环",
-            desc: "真实的天气系统和日夜循环，影响游戏玩法和视觉体验。"
-          },
-          freedom: {
-            title: "随心所欲",
-            desc: "选择你的玩法，公路旅行OR运输救援。"
-          },
-          npc: {
-            title: "NPC互动",
-            desc: "遇到各种性格鲜明的角色，接受任务，建立关系，解锁世界。"
-          },
-          achievements: {
-            title: "成就系统",
-            desc: "超过50个隐藏成就，挑战你的探索能力和游戏技巧。"
-          }
+          eyebrow: "01 · 游戏特色",
+          desc: "驾驶、燃料管理、资源运输、车辆改装、深入探索——一场沉浸式的荒野驾驶体验。",
+          title: "核心玩法",
+          driving: { title: "驾驶体验", desc: "驾驶汽车或卡车穿越各种未知地形，感受真实的驾驶体验。从平坦的公路到崎岖的山路，每一段旅程都充满挑战。" },
+          fuel: { title: "燃料管理", desc: "合理规划路线和燃料消耗，在荒野中寻找补给站。每一次加油都是策略决策，确保你的旅途不会中断。" },
+          resources: { title: "资源运输", desc: "尽可能多地携带资源，合理分配载重。将宝贵的物资运送到目的地，为你的冒险积累财富。" },
+          upgrade: { title: "车辆升级", desc: "用收集的资源升级你的车辆，提升性能，适应更艰难的地形。每一次升级都让你能走得更远。" },
+          explore: { title: "深入探索", desc: "探索未知的荒野深处，发现新的区域和隐藏的秘密。每一条路都通向新的发现。" },
+          survival: { title: "荒野生存", desc: "管理物资和燃料，在恶劣环境中生存，克服各种挑战。" }
         },
+
         community: {
-          title: "加入我们的社区",
-          desc: "加入我们的社群，与其他玩家交流心得，获取最新游戏资讯和独家福利。",
-          qqGroup: {
-            title: "立即加入粉丝群"
-          },
-          bilibili: {
-            title: "点击前往官方帐号",
-            desc: "关注获取更多信息"
-          },
-          discord: {
-            title: "加入Discord社区",
-            desc: "与全球玩家交流"
-          },
-          steam: {
-            title: "前往Steam商城",
-            desc: "了解更多游戏信息"
-          },
-          copyQQ: "<i class='fa fa-copy mr-1'></i>复制群号",
-          copyBilibili: "<i class='fa fa-copy mr-1'></i>复制B站主页地址",
-          copyDiscord: "<i class='fa fa-copy mr-1'></i>复制Discord链接"
-        },
-        footer: {
-          copyright: "© 2025 荒野车旅"
+          eyebrow: "03 · 社区",
+          desc: "加入我们的社群，与其他玩家交流驾驶心得，获取游戏最新动态。",
+          title: "加入社区",
+          discord: { title: "Discord 社区", desc: "与全球玩家交流" },
+          qq: { title: "QQ 粉丝群" },
+          bilibili: { title: "B站官方帐号", desc: "关注获取更多信息" },
+          copy: "复制链接",
+          copyQQ: "复制群号",
+          copyBilibili: "复制链接"
         },
         store: {
           title: "立即加入愿望单",
-          desc: "前往Steam商城，将《Wilderness Road Trip》加入你的愿望单，第一时间获取发售信息。",
-          steam: {
-            title: "加入Steam愿望单",
-            desc: "获取游戏发售通知"
-          }
+          desc: "前往Steam商城，将《Overland Journey》加入你的愿望单，第一时间获取发售信息。",
+          cta: "前往 Steam 商城"
+        }
+      },
+      en: {
+        brand: "Overland Journey",
+        nav: { features: "Features", store: "Store", community: "Community", wishlist: "Wishlist" },
+        hero: {
+          eyebrow: "DRIVING · SURVIVAL · SIMULATION",
+          title: "Overland",
+          titleSoft: "Journey",
+          lede: "Drive cars or trucks across uncharted terrain, manage fuel and supplies, carry as many resources as possible to upgrade your vehicle, and explore deeper into the wild.",
+          cta: "Add to Steam Wishlist",
+          cta2: "Explore Features"
+        },
+        features: {
+          eyebrow: "01 · Game Features",
+          desc: "Driving, fuel management, resource transport, vehicle upgrades, deep exploration — an immersive wilderness driving experience.",
+          title: "Core Gameplay",
+          driving: { title: "Driving Experience", desc: "Drive cars or trucks across uncharted terrain with realistic handling and physics." },
+          fuel: { title: "Fuel Management", desc: "Plan your routes and fuel consumption wisely, find supplies in the wilderness." },
+          resources: { title: "Resource Transport", desc: "Carry as many resources as possible, manage your load, deliver valuable supplies." },
+          upgrade: { title: "Vehicle Upgrade", desc: "Use collected resources to upgrade your vehicle, improve performance, and tackle tougher terrain. Every upgrade lets you go further." },
+          explore: { title: "Deep Exploration", desc: "Venture into the unknown wilderness, discover new areas and hidden secrets. Every road leads to new discoveries." },
+          survival: { title: "Wilderness Survival", desc: "Manage supplies and fuel, survive harsh environments, overcome challenges." }
+        },
+        community: {
+          eyebrow: "03 · Community",
+          desc: "Join our community to share driving experiences and get the latest game updates.",
+          title: "Join Community",
+          discord: { title: "Discord Community", desc: "Chat with players worldwide" },
+          qq: { title: "QQ Fan Group" },
+          bilibili: { title: "Bilibili Official", desc: "Follow for more info" },
+          copy: "Copy link",
+          copyQQ: "Copy number",
+          copyBilibili: "Copy link"
+        },
+        store: {
+          title: "Add to Wishlist",
+          desc: "Head to Steam to add 'Overland Journey' to your wishlist and get notified on launch.",
+          cta: "Go to Steam"
         }
       }
     };
 
-    // 检测用户浏览器语言
     function detectUserLanguage() {
-      const userLang = navigator.language || navigator.userLanguage;
-      // 如果是中文环境，返回中文，否则返回英文
-      return userLang.includes('zh') ? 'zh' : 'en';
+      return (navigator.language || '').includes('zh') ? 'zh' : 'en';
     }
 
-    // 设置页面语言
+    function getNestedTranslation(obj, path) {
+      return path.split('.').reduce((acc, part) => acc && acc[part] !== undefined ? acc[part] : null, obj);
+    }
+
     function setLanguage(lang) {
-      // 更新语言按钮状态
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
       });
-      
-      // 更新页面内容
-      document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        const translation = getNestedTranslation(translations[lang], key);
-        
-        if (translation) {
-          // 处理包含HTML的内容
-          if (translation.includes('<') && translation.includes('>')) {
-            element.innerHTML = translation;
-          } else {
-            element.textContent = translation;
-          }
-        }
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = getNestedTranslation(translations[lang], key);
+        if (val) el.textContent = val;
       });
-      
-      // 保存用户选择的语言
       localStorage.setItem('preferredLanguage', lang);
     }
 
-    // 获取嵌套的翻译值
-    function getNestedTranslation(obj, path) {
-      return path.split('.').reduce((acc, part) => {
-        return acc && acc[part] !== undefined ? acc[part] : null;
-      }, obj);
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const lang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
+        const span = btn.querySelector('span');
+        const original = span.textContent;
+        span.textContent = lang === 'zh' ? '已复制!' : 'Copied!';
+        setTimeout(() => { span.textContent = original; }, 2000);
+      });
     }
 
-    // 移动端菜单切换
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-    
-    // 导航栏滚动效果
-    const nav = document.getElementById('main-nav');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        nav.classList.add('scrolled');
-      } else {
-        nav.classList.remove('scrolled');
-      }
-    });
-    
-    // 图片懒加载功能
-    function loadImage(element) {
-      const src = element.getAttribute('data-src');
-      if (src) {
-        const img = new Image();
-        img.src = src;
-        img.onload = function() {
-          element.style.backgroundImage = `url('${src}')`;
-          element.classList.remove('image-placeholder');
-        };
-      }
-    }
-    
-    // 元素滚动动画和图片懒加载
     document.addEventListener('DOMContentLoaded', () => {
-      // 初始化语言
-      const savedLang = localStorage.getItem('preferredLanguage');
-      const initialLang = savedLang || detectUserLanguage();
-      setLanguage(initialLang);
-      
-      // 语言切换按钮事件
+      const saved = localStorage.getItem('preferredLanguage');
+      setLanguage(saved || detectUserLanguage());
+
       document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const lang = btn.getAttribute('data-lang');
-          setLanguage(lang);
+        btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
+      });
+
+      // Scroll reveal with IntersectionObserver
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        }
+      }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+      // Mouse glow effect on cards
+      document.querySelectorAll('.b-card, .community-card').forEach(card => {
+        card.style.position = 'relative';
+        card.style.overflow = 'hidden';
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+          const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+          card.style.setProperty('--x', x + '%');
+          card.style.setProperty('--y', y + '%');
         });
       });
-      
-      const animatedElements = document.querySelectorAll('.image-container, .fade-in');
-      const lazyImages = document.querySelectorAll('[data-src]');
-      
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px 200px 0px',
-        threshold: 0.1
-      };
-      
-      const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            if (entry.target.hasAttribute('data-src')) {
-              loadImage(entry.target);
-            }
-            if (!entry.target.classList.contains('visible')) {
-              entry.target.classList.add('visible');
-            }
-            if (entry.target.hasAttribute('data-src')) {
-              observer.unobserve(entry.target);
-            }
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.querySelector(anchor.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         });
-      }, observerOptions);
-      
-      animatedElements.forEach((element, index) => {
-        if (index > 0) {
-          observer.observe(element);
-        }
       });
-      
-      lazyImages.forEach(image => {
-        observer.observe(image);
-      });
+
+      // Parallax on hero image
+      const heroImg = document.querySelector('.hero-preview');
+      if (heroImg) {
+        window.addEventListener('scroll', () => {
+          const scrolled = window.pageYOffset;
+          const rate = scrolled * 0.3;
+          heroImg.style.transform = `translateY(${rate}px)`;
+        }, { passive: true });
+      }
     });
-
-    // 复制QQ群号功能
-    function copyQQNumber() {
-      const qqNumber = "651886971";
-      navigator.clipboard.writeText(qqNumber).then(() => {
-        // 根据当前语言显示不同提示
-        const currentLang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
-        const message = currentLang === 'zh' ? "QQ群号已复制：" + qqNumber : "QQ group number copied: " + qqNumber;
-        alert(message);
-      }).catch(err => {
-        console.error('无法复制文本: ', err);
-      });
-    }
-
-    // 复制B站主页地址功能
-    function copyBilibiliUrl() {
-      const bilibiliUrl = "https://space.bilibili.com/3546609113630783";
-      navigator.clipboard.writeText(bilibiliUrl).then(() => {
-        // 根据当前语言显示不同提示
-        const currentLang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
-        const message = currentLang === 'zh' ? "B站主页地址已复制" : "Bilibili URL copied";
-        alert(message);
-      }).catch(err => {
-        console.error('无法复制文本: ', err);
-      });
-    }
-
-    // 复制Discord链接功能
-    function copyDiscordUrl() {
-      const discordUrl = "https://discord.gg/32SpgdZfw9";
-      navigator.clipboard.writeText(discordUrl).then(() => {
-        // 根据当前语言显示不同提示
-        const currentLang = document.querySelector('.lang-btn.active').getAttribute('data-lang');
-        const message = currentLang === 'zh' ? "Discord链接已复制" : "Discord link copied";
-        alert(message);
-      }).catch(err => {
-        console.error('无法复制文本: ', err);
-      });
-    }
   </script>
 </body>
 </html>

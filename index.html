@@ -468,6 +468,41 @@
       .community-grid { grid-template-columns: 1fr; }
       .closing { margin: 28px 16px; padding: 80px 0; }
       .lang-switch { top: 12px; right: 12px; }
+      .showcase-row { grid-template-columns: 1fr; gap: 24px; }
+      .showcase-row.reverse { direction: ltr; }
+    }
+
+    /* Mobile small screens */
+    @media (max-width: 480px) {
+      .wrap { padding: 0 16px; }
+      .hero { padding: 48px 0 64px; min-height: auto; }
+      .hero h1 { font-size: clamp(32px, 10vw, 48px); }
+      .hero p.lede { font-size: 16px; }
+      .hero .actions { flex-direction: column; align-items: stretch; }
+      .hero .actions .pill,
+      .hero .actions .ghost { width: 100%; justify-content: center; }
+      .section-head h2 { font-size: clamp(28px, 8vw, 40px); }
+      .showcase-text h3 { font-size: clamp(20px, 6vw, 28px); }
+      .showcase-text p { font-size: 15px; }
+      .showcase-img { border-radius: 20px; }
+      .showcase-img img { aspect-ratio: 16 / 9; }
+      .nav-shell { margin: 12px auto 0; max-width: calc(100% - 32px); }
+      .nav { padding: 6px 8px 6px 14px; gap: 12px; }
+      .nav .brand { font-size: 14px; }
+      .pill { padding: 8px 12px 8px 16px; font-size: 12px; }
+      .pill .icon-wrap { width: 24px; height: 24px; }
+      .ghost { padding: 10px 16px; font-size: 13px; }
+      .social-row { gap: 10px; }
+      .social-btn { width: 36px; height: 36px; }
+      .community-card { padding: 6px; }
+      .community-card .core { padding: 24px; }
+      .closing { margin: 20px 12px; padding: 64px 0; border-radius: 28px; }
+      .closing h2 { font-size: clamp(28px, 8vw, 40px); }
+      .closing p { font-size: 15px; }
+      .lang-switch { top: 8px; right: 8px; }
+      .lang-btn { padding: 5px 10px; font-size: 10px; }
+      footer { padding: 24px 16px; }
+      footer .row { flex-direction: column; gap: 8px; text-align: center; }
     }
 
     /* ============ MOTION ENTRY ============ */
